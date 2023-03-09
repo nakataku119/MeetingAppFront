@@ -3,12 +3,19 @@ import { NextPage } from "next";
 import React, { useEffect } from "react";
 
 const HomePage: NextPage = () => {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
 
   return (
     <div>
       <h2>ログイン状態</h2>
-      {isAuthenticated ? <p>ログイン中です</p> : <p>ログアウトしています</p>}
+      {isAuthenticated ? (
+        <>
+          <p>ログイン中です</p>
+          <button onClick={() => logout()}>Logout</button>
+        </>
+      ) : (
+        <p>ログアウトしています</p>
+      )}
     </div>
   );
 };
