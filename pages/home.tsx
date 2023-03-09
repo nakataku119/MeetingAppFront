@@ -1,4 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+import { access } from "fs";
 import { NextPage } from "next";
 import React, { useEffect } from "react";
 
@@ -13,6 +15,16 @@ const HomePage: NextPage = () => {
     getToken();
   }, []);
 
+  const checkAPI = async () => {
+    console.log("click");
+    const accessToken = await getAccessTokenSilently({});
+    axios.get("http://localhost:3333/users", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  };
+
   return (
     <div>
       <h2>ログイン状態</h2>
@@ -24,6 +36,7 @@ const HomePage: NextPage = () => {
       ) : (
         <p>ログアウトしています</p>
       )}
+      <button onClick={() => checkAPI()}>api test</button>
     </div>
   );
 };
