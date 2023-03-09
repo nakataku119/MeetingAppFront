@@ -1,6 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
-import { access } from "fs";
 import { NextPage } from "next";
 import React, { useEffect } from "react";
 
