@@ -1,10 +1,15 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
+import { axiosClient } from "@/axios/AxiosClientProvider";
 
 export default function Home() {
   const { loginWithRedirect } = useAuth0();
-
+  // テスト用リクエスト
+  const checkAPIGet = () => {
+    console.log("click");
+    axiosClient.get("/users");
+  };
   return (
     <>
       <Head>
@@ -16,6 +21,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <button onClick={() => loginWithRedirect()}>Login</button>
+          <button onClick={() => checkAPIGet()}>api test get</button>
         </div>
       </main>
     </>
