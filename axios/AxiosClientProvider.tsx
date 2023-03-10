@@ -13,7 +13,7 @@ export function AxiosClientProvider({
 }: {
   children: React.ReactElement;
 }) {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   useEffect(() => {
     const getToken = async () => {
       const accessToken = await getAccessTokenSilently();
@@ -24,9 +24,10 @@ export function AxiosClientProvider({
         return config;
       });
     };
-    getToken();
-    console.log("test");
-  }, []);
+    if (isAuthenticated) {
+      getToken();
+    }
+  }, [isAuthenticated]);
 
   return <>{children}</>;
 }
