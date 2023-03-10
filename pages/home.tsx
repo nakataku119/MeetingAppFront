@@ -25,10 +25,13 @@ const HomePage: NextPage = () => {
     };
     setTokenToAxios();
   }, []);
-
-  const checkAPI = async () => {
+  // 確認用 Request
+  const checkAPIGet = () => {
     console.log("click");
     axiosClient.get("/users");
+  };
+  const checkAPIPost = () => {
+    axiosClient.post("/users", { name: "test test test" });
   };
 
   return (
@@ -42,7 +45,8 @@ const HomePage: NextPage = () => {
       ) : (
         <p>ログアウトしています</p>
       )}
-      <button onClick={() => checkAPI()}>api test</button>
+      <button onClick={() => checkAPIGet()}>api test get</button>
+      <button onClick={() => checkAPIPost()}>api test post</button>
     </div>
   );
 };
