@@ -2,6 +2,8 @@ import axios, { AxiosInstance } from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 
+let accessToken = "";
+
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:3333",
   headers: { "Content-Type": "application/json" },
@@ -15,9 +17,11 @@ export function AxiosClientProvider({
 }) {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   useEffect(() => {
-    const getToken = async () => {
-      const accessToken = await getAccessTokenSilently();
-      axiosClient.interceptors.request.use((config: any) => {
+    const getToken = () => {
+      axiosClient.interceptors.request.use(async (config: any) => {
+        if (!accessToken) {
+          accessToken = await getAccessTokenSilently();
+        }
         config.headers = {
           Authorization: "Bearer " + accessToken,
         };
