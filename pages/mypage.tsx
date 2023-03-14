@@ -1,4 +1,5 @@
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
+import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { Box, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
@@ -23,6 +24,7 @@ const MyPage: NextPage = () => {
       >
         チームメンバー
       </Typography>
+      <MemberCardContainer />
     </Box>
   );
 };
