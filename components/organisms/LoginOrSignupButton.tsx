@@ -1,11 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button, Divider, Typography } from "@mui/material";
-import { Container } from "@mui/system";
+import { Button, Divider, Paper, Typography } from "@mui/material";
 
 export default function LoginOrSingupButton() {
   const { loginWithRedirect } = useAuth0();
   return (
-    <Container
+    <Paper
+      elevation={3}
       sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
     >
       <Button
@@ -33,6 +33,6 @@ export default function LoginOrSingupButton() {
       >
         新規登録
       </Button>
-    </Container>
+    </Paper>
   );
 }
