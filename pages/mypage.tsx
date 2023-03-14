@@ -1,6 +1,15 @@
+import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { NextPage } from "next";
 import React from "react";
 
@@ -16,14 +25,17 @@ const MyPage: NextPage = () => {
         </Button>
       </Box>
       <MeetingCardContainer />
-      <Typography
-        variant="h5"
-        component="h1"
-        color="text.secondary"
-        sx={{ pb: 1, pt: 3 }}
-      >
-        チームメンバー
-      </Typography>
+      <Box sx={{ display: "flex", p: 1 }}>
+        <Typography
+          variant="h5"
+          component="h1"
+          color="text.secondary"
+          sx={{ pb: 1, pt: 3, pr: 1 }}
+        >
+          チームメンバー
+        </Typography>
+        <TeamSelectForm />
+      </Box>
       <MemberCardContainer />
     </Box>
   );
