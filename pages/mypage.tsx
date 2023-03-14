@@ -1,19 +1,45 @@
+import { axiosClient } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+type User = {
+  name: string;
+  teams: Team[];
+  mtgs: Mtg[];
+};
+
+type Team = {
+  id: number;
+  name: string;
+  users: User[];
+};
+
+type Mtg = {
+  id: number;
+  schedule: Date;
+  users: User[];
+  agendas: Agenda[];
+};
+
+type Agenda = {
+  id: number;
+  agenda: string;
+  mtgId: number;
+};
 
 const MyPage: NextPage = () => {
+  const [currentUser, setCurrentUser] = useState<User>();
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const res = await axiosClient.get("http://localhost:3333/users/me");
+      console.log(res.data.name);
+    };
+  });
   return (
     <Box sx={{ width: 1, height: "100vh" }}>
       <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
