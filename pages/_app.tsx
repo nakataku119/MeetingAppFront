@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { AxiosClientProvider } from "@/axios/AxiosClientProvider";
 import AppHeader from "@/components/organisms/AppHeader";
+import AppFooter from "@/components/organisms/AppFooter";
 
 export default function App({ Component, pageProps }: AppProps) {
   const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/home`;
@@ -19,6 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <>
           <AppHeader />
           <Component {...pageProps} />
+          <AppFooter />
         </>
       </AxiosClientProvider>
     </Auth0Provider>
