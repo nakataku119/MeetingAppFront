@@ -6,7 +6,7 @@ export default function LoginOrSinginButton() {
     <Container
       sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
     >
-      <Button variant="contained" sx={{ width: "100%" }}>
+      <Button variant="contained" sx={{ width: "100%", padding: "10px" }}>
         ログイン
       </Button>
       <Divider>
@@ -18,7 +18,7 @@ export default function LoginOrSinginButton() {
           または
         </Typography>
       </Divider>
-      <Button variant="outlined" sx={{ width: "100%" }}>
+      <Button variant="outlined" sx={{ width: "100%", padding: "10px" }}>
         新規登録
       </Button>
     </Container>
