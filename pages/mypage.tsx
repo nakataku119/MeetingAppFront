@@ -15,7 +15,7 @@ import React from "react";
 
 const MyPage: NextPage = () => {
   return (
-    <Box sx={{ width: 1, height: "100vh", border: 1 }}>
+    <Box sx={{ width: 1, height: "100vh" }}>
       <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
         <Typography variant="h5" component="h1" color="text.secondary">
           今後のミーティング
