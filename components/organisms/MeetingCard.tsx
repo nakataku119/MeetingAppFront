@@ -9,7 +9,7 @@ export default function MeetingCard() {
   return (
     <Paper
       elevation={3}
-      sx={{ width: "33%", minWidth: 275, height: "40%", margin: 3 }}
+      sx={{ width: "30%", minWidth: 275, height: "100%", mr: 1 }}
     >
       <CardContent sx={{ height: "90%" }}>
         <Typography sx={{ fontSize: 14 }} color="text.secondary">
