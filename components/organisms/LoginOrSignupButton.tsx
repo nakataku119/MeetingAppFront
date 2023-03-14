@@ -1,12 +1,18 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import { Button, Divider, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 
-export default function LoginOrSinginButton() {
+export default function LoginOrSingupButton() {
+  const { loginWithRedirect } = useAuth0();
   return (
     <Container
       sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
     >
-      <Button variant="contained" sx={{ width: "100%", padding: "10px" }}>
+      <Button
+        variant="contained"
+        onClick={() => loginWithRedirect()}
+        sx={{ width: "100%", padding: "10px" }}
+      >
         ログイン
       </Button>
       <Divider>
@@ -18,7 +24,13 @@ export default function LoginOrSinginButton() {
           または
         </Typography>
       </Divider>
-      <Button variant="outlined" sx={{ width: "100%", padding: "10px" }}>
+      <Button
+        variant="outlined"
+        onClick={() =>
+          loginWithRedirect({ authorizationParams: { screen_hint: "signup" } })
+        }
+        sx={{ width: "100%", padding: "10px" }}
+      >
         新規登録
       </Button>
     </Container>
