@@ -11,7 +11,7 @@ import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
-  const [teamMembers, setTeamMembers] = useState<User[]>();
+  const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const { isAuthenticated } = useAuth0();
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
