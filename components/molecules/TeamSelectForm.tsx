@@ -1,17 +1,25 @@
+import { Team } from "@/utils/types";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-export default function TeamSelectForm() {
+type Prop = {
+  belongedTeam?: Team[];
+};
+
+export default function TeamSelectForm(props: Prop) {
+  const { belongedTeam } = props;
   return (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-      <InputLabel id="demo-simple-select-standard-label">Team</InputLabel>
+      <InputLabel id="belonged-team-select-label">Team</InputLabel>
       <Select
-        labelId="demo-simple-select-standard-label"
-        id="demo-simple-select-standard"
-        label="Age"
+        labelId="belonged-team-select-label"
+        id="belonged-team-select"
+        label="Team"
       >
-        <MenuItem value={10}>Team A</MenuItem>
-        <MenuItem value={20}>Team B</MenuItem>
-        <MenuItem value={30}>Team C</MenuItem>
+        {belongedTeam?.map((item: Team, index: number) => (
+          <MenuItem key={index} value={item.name}>
+            {item.name}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );

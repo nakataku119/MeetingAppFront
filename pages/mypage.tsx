@@ -45,7 +45,7 @@ const MyPage: NextPage = () => {
         >
           チームメンバー
         </Typography>
-        <TeamSelectForm />
+        <TeamSelectForm belongedTeam={currentUser?.teams} />
       </Box>
       <MemberCardContainer />
     </Box>
