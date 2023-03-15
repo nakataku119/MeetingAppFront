@@ -3,16 +3,7 @@ import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {
-  Avatar,
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-} from "@mui/material";
-import { Agent } from "http";
+import { Avatar, Chip, Paper } from "@mui/material";
 
 type User = {
   name: string;
@@ -51,7 +42,15 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          {meeting.schedule.toString()}
+          {new Date(meeting.schedule).getFullYear() +
+            "/" +
+            (new Date(meeting.schedule).getMonth() + 1) +
+            "/" +
+            new Date(meeting.schedule).getDate() +
+            "  " +
+            new Date(meeting.schedule).getHours() +
+            ":" +
+            new Date(meeting.schedule).getMinutes()}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー
