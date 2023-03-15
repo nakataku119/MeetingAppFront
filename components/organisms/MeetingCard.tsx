@@ -4,31 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
-
-type User = {
-  name: string;
-  teams: Team[];
-  mtgs: Mtg[];
-};
-
-type Team = {
-  id: number;
-  name: string;
-  users: User[];
-};
-
-type Mtg = {
-  id: number;
-  schedule: Date;
-  agendas: Agenda[];
-  users: User[];
-};
-
-type Agenda = {
-  id: number;
-  agenda: string;
-  mtgId: number;
-};
+import { Agenda, Mtg, User } from "@/utils/types";
 
 export default function MeetingCard(props: { meeting: Mtg }) {
   const { meeting } = props;

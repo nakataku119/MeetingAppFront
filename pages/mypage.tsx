@@ -2,34 +2,10 @@ import { axiosClient } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
+import { User } from "@/utils/types";
 import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
-
-type User = {
-  name: string;
-  teams: Team[];
-  mtgs: Mtg[];
-};
-
-type Team = {
-  id: number;
-  name: string;
-  users: User[];
-};
-
-type Mtg = {
-  id: number;
-  schedule: Date;
-  agendas: Agenda[];
-  users: User[];
-};
-
-type Agenda = {
-  id: number;
-  agenda: string;
-  mtgId: number;
-};
 
 const MyPage: NextPage = () => {
   const [currentUser, setCurrentUser] = useState<User>();
