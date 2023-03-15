@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
 import { Agenda, Mtg, User } from "@/utils/types";
-import dateFormatter from "@/utils/functions";
+import { dateFormatter } from "@/utils/functions";
 
 export default function MeetingCard(props: { meeting: Mtg }) {
   const { meeting } = props;
