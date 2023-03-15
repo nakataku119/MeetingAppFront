@@ -3,9 +3,44 @@ import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Avatar, Chip, Paper } from "@mui/material";
+import {
+  Avatar,
+  Chip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+} from "@mui/material";
+import { Agent } from "http";
 
-export default function MeetingCard() {
+type User = {
+  name: string;
+  teams: Team[];
+  mtgs: Mtg[];
+};
+
+type Team = {
+  id: number;
+  name: string;
+  users: User[];
+};
+
+type Mtg = {
+  id: number;
+  schedule: Date;
+  agendas: Agenda[];
+  users: User[];
+};
+
+type Agenda = {
+  id: number;
+  agenda: string;
+  mtgId: number;
+};
+
+export default function MeetingCard(props: { meeting: Mtg }) {
+  const { meeting } = props;
   return (
     <Paper
       elevation={3}
@@ -16,83 +51,29 @@ export default function MeetingCard() {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          2022/11/11 13:00 - 15:00
+          {meeting.schedule.toString()}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー
         </Typography>
         <Box sx={{ border: 1, borderRadius: 2, height: "30%", padding: 0.5 }}>
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 1"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 2"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 3"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 4"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 4"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            avatar={<Avatar>F</Avatar>}
-            label="member 4"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
+          {meeting.users.map((item: User) => (
+            <Chip
+              avatar={<Avatar>F</Avatar>}
+              label={item.name}
+              sx={{ margin: 0.2 }}
+              onDelete={() => {}}
+              size="small"
+            />
+          ))}
         </Box>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           トピック
         </Typography>
-        <Box sx={{ border: 1, borderRadius: 2, height: "30%", padding: 0.5 }}>
-          <Chip
-            label="memfdasfasdfasdfdasfdsafdsafasfdsafasdfasdfasdber 1"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            label="member 2"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            label="member 3"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
-          <Chip
-            label="member 4"
-            sx={{ margin: 0.2 }}
-            onDelete={() => {}}
-            size="small"
-          />
+        <Box sx={{ height: "30%" }}>
+          {meeting.agendas.map((item: Agenda) => (
+            <li>{item.agenda}</li>
+          ))}
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>

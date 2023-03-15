@@ -21,8 +21,8 @@ type Team = {
 type Mtg = {
   id: number;
   schedule: Date;
-  users: User[];
   agendas: Agenda[];
+  users: User[];
 };
 
 type Agenda = {
@@ -33,13 +33,16 @@ type Agenda = {
 
 const MyPage: NextPage = () => {
   const [currentUser, setCurrentUser] = useState<User>();
+  // const [belongedTeam, setBelongedTeam] = useState<Team[]>();
+  // const [joinedMeeting, setJoinedMeeting] = useState<Mtg[]>();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const res = await axiosClient.get("http://localhost:3333/users/me");
-      console.log(res.data.name);
+      setCurrentUser(res.data);
     };
-  });
+    fetchCurrentUser();
+  }, []);
   return (
     <Box sx={{ width: 1, height: "100vh" }}>
       <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
@@ -50,7 +53,11 @@ const MyPage: NextPage = () => {
           新規ミーティングを設定
         </Button>
       </Box>
-      <MeetingCardContainer />
+      {currentUser?.mtgs ? (
+        <MeetingCardContainer joinedMtgs={currentUser?.mtgs} />
+      ) : (
+        <p>予定はありません。</p>
+      )}
       <Box sx={{ display: "flex", p: 1 }}>
         <Typography
           variant="h5"
