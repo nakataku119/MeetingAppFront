@@ -27,38 +27,43 @@ const MyPage: NextPage = () => {
       fetchCurrentUser();
     }
   }, [isAuthenticated]);
-  return (
-    <Box sx={{ width: 1, height: "100vh" }}>
-      <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
-        <Typography variant="h5" component="h1" color="text.secondary">
-          今後のミーティング
-        </Typography>
-        <Button size="small" variant="outlined">
-          新規ミーティングを設定
-        </Button>
+
+  if (currentUser) {
+    return (
+      <Box sx={{ width: 1, height: "100vh" }}>
+        <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
+          <Typography variant="h5" component="h1" color="text.secondary">
+            今後のミーティング
+          </Typography>
+          <Button size="small" variant="outlined">
+            新規ミーティングを設定
+          </Button>
+        </Box>
+        <MeetingCardContainer joinedMtgs={currentUser.mtgs} />
+        <Box sx={{ display: "flex", p: 1 }}>
+          <Typography
+            variant="h5"
+            component="h1"
+            color="text.secondary"
+            sx={{ pb: 1, pt: 3, pr: 1 }}
+          >
+            チームメンバー
+          </Typography>
+          <TeamSelectForm
+            belongedTeam={currentUser.teams}
+            onSelectTeam={handleSelectTeam}
+          />
+        </Box>
+        <MemberCardContainer members={teamMembers} />
       </Box>
-      {currentUser?.mtgs ? (
-        <MeetingCardContainer joinedMtgs={currentUser?.mtgs} />
-      ) : (
-        <p>予定はありません。</p>
-      )}
-      <Box sx={{ display: "flex", p: 1 }}>
-        <Typography
-          variant="h5"
-          component="h1"
-          color="text.secondary"
-          sx={{ pb: 1, pt: 3, pr: 1 }}
-        >
-          チームメンバー
-        </Typography>
-        <TeamSelectForm
-          belongedTeam={currentUser?.teams}
-          onSelectTeam={handleSelectTeam}
-        />
+    );
+  } else {
+    return (
+      <Box sx={{ width: 1, height: "100vh" }}>
+        <p>waiting...</p>
       </Box>
-      <MemberCardContainer members={teamMembers} />
-    </Box>
-  );
+    );
+  }
 };
 
 export default MyPage;
