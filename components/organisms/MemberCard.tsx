@@ -1,5 +1,9 @@
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { dateFormatter, getNextMeetingSchedule } from "@/utils/functions";
+import {
+  dateFormatter,
+  getLastMeetingSchedule,
+  getNextMeetingSchedule,
+} from "@/utils/functions";
 import { User } from "@/utils/types";
 import {
   Avatar,
@@ -50,7 +54,7 @@ export default function MemberCard(props: Prop) {
           Last Meeting
         </Typography>
         <Typography variant="body1" component="div">
-          2022/11/11 13:00 - 15:00
+          {getLastMeetingSchedule(currentUser!, member)}
         </Typography>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
