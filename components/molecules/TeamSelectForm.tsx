@@ -3,10 +3,11 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 type Prop = {
   belongedTeam?: Team[];
+  onSelectTeam: (team: Team) => void;
 };
 
 export default function TeamSelectForm(props: Prop) {
-  const { belongedTeam } = props;
+  const { belongedTeam, onSelectTeam } = props;
   return (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
       <InputLabel id="belonged-team-select-label">Team</InputLabel>
@@ -16,7 +17,11 @@ export default function TeamSelectForm(props: Prop) {
         label="Team"
       >
         {belongedTeam?.map((item: Team, index: number) => (
-          <MenuItem key={index} value={item.name}>
+          <MenuItem
+            key={index}
+            value={item.name}
+            onClick={() => onSelectTeam(item)}
+          >
             {item.name}
           </MenuItem>
         ))}

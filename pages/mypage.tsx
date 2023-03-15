@@ -2,7 +2,7 @@ import { axiosClient } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
-import { User } from "@/utils/types";
+import { Team, User } from "@/utils/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
@@ -10,7 +10,12 @@ import React, { useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
   const [currentUser, setCurrentUser] = useState<User>();
+  const [teamMembers, setTeamMembers] = useState<User[]>();
   const { isAuthenticated } = useAuth0();
+
+  const handleSelectTeam = (team: Team) => {
+    setTeamMembers(team.users);
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -45,7 +50,10 @@ const MyPage: NextPage = () => {
         >
           チームメンバー
         </Typography>
-        <TeamSelectForm belongedTeam={currentUser?.teams} />
+        <TeamSelectForm
+          belongedTeam={currentUser?.teams}
+          onSelectTeam={handleSelectTeam}
+        />
       </Box>
       <MemberCardContainer />
     </Box>
