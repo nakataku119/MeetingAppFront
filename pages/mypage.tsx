@@ -3,20 +3,24 @@ import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { User } from "@/utils/types";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
   const [currentUser, setCurrentUser] = useState<User>();
+  const { isAuthenticated } = useAuth0();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const res = await axiosClient.get("http://localhost:3333/users/me");
       setCurrentUser(res.data);
     };
-    fetchCurrentUser();
-  }, []);
+    if (isAuthenticated) {
+      fetchCurrentUser();
+    }
+  }, [isAuthenticated]);
   return (
     <Box sx={{ width: 1, height: "100vh" }}>
       <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
