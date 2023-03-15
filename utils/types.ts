@@ -1,4 +1,5 @@
 export type User = {
+  id: string;
   name: string;
   teams: Team[];
   mtgs: Mtg[];
