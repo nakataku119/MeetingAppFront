@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
 import { Agenda, Mtg, User } from "@/utils/types";
+import dateFormatter from "@/utils/functions";
 
 export default function MeetingCard(props: { meeting: Mtg }) {
   const { meeting } = props;
@@ -18,15 +19,7 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          {new Date(meeting.schedule).getFullYear() +
-            "/" +
-            (new Date(meeting.schedule).getMonth() + 1) +
-            "/" +
-            new Date(meeting.schedule).getDate() +
-            "  " +
-            new Date(meeting.schedule).getHours() +
-            ":" +
-            new Date(meeting.schedule).getMinutes()}
+          {dateFormatter(meeting.schedule)}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー
