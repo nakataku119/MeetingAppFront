@@ -9,8 +9,6 @@ import React, { useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
   const [currentUser, setCurrentUser] = useState<User>();
-  // const [belongedTeam, setBelongedTeam] = useState<Team[]>();
-  // const [joinedMeeting, setJoinedMeeting] = useState<Mtg[]>();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
