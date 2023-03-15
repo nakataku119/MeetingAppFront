@@ -1,3 +1,4 @@
+import { axiosClient } from "@/axios/AxiosClientProvider";
 import {
   Button,
   Dialog,
@@ -28,14 +29,13 @@ export default function SignupForm() {
     setDialogOpen(false);
   };
   const handleDialogConfirm = async () => {
-    try {
-      console.log(name);
-      router.push("/mypage");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setDialogOpen(false);
-    }
+    await axiosClient
+      .post("/users", { name: name })
+      .then((res) => router.push("/mypage"))
+      .catch((error) => console.log(error))
+      .then(() => {
+        setDialogOpen(false);
+      });
   };
   return (
     <>
