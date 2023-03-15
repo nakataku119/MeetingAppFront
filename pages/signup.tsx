@@ -1,7 +1,8 @@
+import SignupForm from "@/components/organisms/SignupForm";
 import { NextPage } from "next";
 
 const Signup: NextPage = () => {
-  return <div>test</div>;
+  return <SignupForm />;
 };
 
 export default Signup;
