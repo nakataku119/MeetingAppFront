@@ -3,6 +3,7 @@ import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
+import { getPlanedMeetings } from "@/utils/functions";
 import { Team, User } from "@/utils/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
@@ -39,7 +40,9 @@ const MyPage: NextPage = () => {
             新規ミーティングを設定
           </Button>
         </Box>
-        <MeetingCardContainer joinedMtgs={currentUser.mtgs} />
+        <MeetingCardContainer
+          joinedMtgs={getPlanedMeetings(currentUser.mtgs)}
+        />
         <Box sx={{ display: "flex", p: 1 }}>
           <Typography
             variant="h5"
