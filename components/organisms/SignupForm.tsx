@@ -32,7 +32,7 @@ export default function SignupForm() {
     await axiosClient
       .post("/users", { name: name })
       .then((res) => router.push("/mypage"))
-      .catch((error) => console.log(error))
+      .catch((error) => setError("登録できません。"))
       .then(() => {
         setDialogOpen(false);
       });
