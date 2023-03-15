@@ -7,7 +7,7 @@ let accessToken = "";
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:3333",
   headers: { "Content-Type": "application/json" },
-  timeout: 5000,
+  timeout: 10000,
 });
 
 export function AxiosClientProvider({
@@ -29,6 +29,7 @@ export function AxiosClientProvider({
       });
     };
     if (isAuthenticated) {
+      console.log("axiosclient");
       getToken();
     }
   }, [isAuthenticated]);
