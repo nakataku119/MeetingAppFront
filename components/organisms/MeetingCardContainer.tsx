@@ -6,8 +6,8 @@ export default function MeetingCardContainer(props: { joinedMtgs: Mtg[] }) {
   const { joinedMtgs } = props;
   return (
     <Box sx={{ height: "40%", display: "flex" }}>
-      {joinedMtgs.map((item: Mtg) => (
-        <MeetingCard meeting={item} />
+      {joinedMtgs.map((item: Mtg, index: number) => (
+        <MeetingCard meeting={item} key={index} />
       ))}
     </Box>
   );

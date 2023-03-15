@@ -25,13 +25,14 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           参加メンバー
         </Typography>
         <Box sx={{ border: 1, borderRadius: 2, height: "30%", padding: 0.5 }}>
-          {meeting.users.map((item: User) => (
+          {meeting.users.map((item: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
               label={item.name}
               sx={{ margin: 0.2 }}
               onDelete={() => {}}
               size="small"
+              key={index}
             />
           ))}
         </Box>
@@ -39,8 +40,8 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           トピック
         </Typography>
         <Box sx={{ height: "30%" }}>
-          {meeting.agendas.map((item: Agenda) => (
-            <li>{item.agenda}</li>
+          {meeting.agendas.map((item: Agenda, index: number) => (
+            <li key={index}>{item.agenda}</li>
           ))}
         </Box>
       </CardContent>
