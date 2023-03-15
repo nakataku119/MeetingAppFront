@@ -1,3 +1,5 @@
+import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
+import { dateFormatter, getNextMeetingSchedule } from "@/utils/functions";
 import { User } from "@/utils/types";
 import {
   Avatar,
@@ -7,6 +9,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import { useContext } from "react";
 
 type Prop = {
   member: User;
@@ -14,6 +17,8 @@ type Prop = {
 
 export default function MemberCard(props: Prop) {
   const { member } = props;
+  // myPageでcurrentUserのnullをガード
+  const { currentUser } = useContext(CurrentUserContext);
   return (
     <Paper
       elevation={3}
@@ -37,8 +42,9 @@ export default function MemberCard(props: Prop) {
         <Typography sx={{ fontSize: 14 }} color="text.secondary">
           Next Meeting
         </Typography>
+        {/* 簡単に */}
         <Typography variant="body1" component="div">
-          2022/11/11 13:00 - 15:00
+          {getNextMeetingSchedule(currentUser!, member)}
         </Typography>
         <Typography sx={{ mt: 1, fontSize: 14 }} color="text.secondary">
           Last Meeting
