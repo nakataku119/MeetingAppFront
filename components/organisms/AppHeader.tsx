@@ -6,9 +6,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useAuth0 } from "@auth0/auth0-react";
+import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 
 export default function AppHeader() {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { currentUser } = React.useContext(CurrentUserContext);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ color: "#cff09e", backgroundColor: "#3b8686" }}>
@@ -17,9 +19,12 @@ export default function AppHeader() {
             <Link href="/">LOGO</Link>
           </Typography>
           {isAuthenticated ? (
-            <Button color="inherit" onClick={() => logout()}>
-              ログアウト
-            </Button>
+            <>
+              <p>name: {currentUser?.name}</p>
+              <Button color="inherit" onClick={() => logout()} sx={{ pl: 5 }}>
+                ログアウト
+              </Button>
+            </>
           ) : (
             <Button color="inherit" onClick={() => loginWithRedirect()}>
               ログイン
