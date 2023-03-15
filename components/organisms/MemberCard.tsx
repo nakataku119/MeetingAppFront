@@ -1,3 +1,4 @@
+import { User } from "@/utils/types";
 import {
   Avatar,
   Box,
@@ -7,7 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 
-export default function MemberCard() {
+type Prop = {
+  member: User;
+};
+
+export default function MemberCard(props: Prop) {
+  const { member } = props;
   return (
     <Paper
       elevation={3}
@@ -25,7 +31,7 @@ export default function MemberCard() {
             sx={{ fontSize: 20, ml: 2, height: "100%", margin: "auto 0" }}
             color="text.secondary"
           >
-            Member Member
+            {member.name}
           </Typography>
         </Box>
         <Typography sx={{ fontSize: 14 }} color="text.secondary">

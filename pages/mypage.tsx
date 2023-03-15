@@ -55,7 +55,7 @@ const MyPage: NextPage = () => {
           onSelectTeam={handleSelectTeam}
         />
       </Box>
-      <MemberCardContainer />
+      <MemberCardContainer members={teamMembers} />
     </Box>
   );
 };
