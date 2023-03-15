@@ -8,7 +8,7 @@ import styles from "@/styles/Home.module.css";
 import CurrentUserProvider from "@/contexts/CurrentUserProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/mypage`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/signup`;
   return (
     <Auth0Provider
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
