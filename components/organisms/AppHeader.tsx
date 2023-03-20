@@ -16,7 +16,7 @@ export default function AppHeader() {
       <AppBar sx={{ color: "#cff09e", backgroundColor: "#3b8686" }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href="/">LOGO</Link>
+            <Link href="/">LOGO LOGO</Link>
           </Typography>
           {isAuthenticated ? (
             <>
