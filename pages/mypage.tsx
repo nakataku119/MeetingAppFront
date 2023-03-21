@@ -1,3 +1,4 @@
+import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
@@ -6,15 +7,27 @@ import { getPlanedMeetings } from "@/utils/functions";
 import { Team, User } from "@/utils/types";
 import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { hasToken } = useContext(AxiosClientContext);
 
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
+
+  useEffect(() => {
+    console.log(hasToken);
+    const fetchCurrentUser = async () => {
+      const res = await axiosClient.get("/users/me");
+      setCurrentUser(res.data);
+    };
+    if (hasToken) {
+      fetchCurrentUser();
+    }
+  }, [hasToken]);
 
   if (currentUser) {
     return (
