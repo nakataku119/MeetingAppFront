@@ -1,13 +1,19 @@
 import axios, { AxiosInstance } from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect } from "react";
-
-let accessToken = "";
+import { createContext, useEffect, useState } from "react";
 
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
+});
+
+interface AxiosClientContextProps {
+  hasToken: boolean;
+}
+
+export const AxiosClientContext = createContext<AxiosClientContextProps>({
+  hasToken: false,
 });
 
 export function AxiosClientProvider({
@@ -16,23 +22,51 @@ export function AxiosClientProvider({
   children: React.ReactElement;
 }) {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const [accessToken, setAccessToken] = useState("");
+  const [hasToken, setHasToken] = useState(false);
+  // useEffect(() => {
+  //   const getToken = () => {
+  //     axiosClient.interceptors.request.use(async (config: any) => {
+  //       if (!accessToken) {
+  //         accessToken = await getAccessTokenSilently();
+  //       }
+  //       config.headers = {
+  //         Authorization: "Bearer " + accessToken,
+  //       };
+  //       return config;
+  //     });
+  //   };
+  //   if (isAuthenticated) {
+  //     console.log("axiosclient");
+  //     getToken();
+  //   }
+  // }, [isAuthenticated]);
+  // 認証済みの場合にアクセストークンを取得
   useEffect(() => {
-    const getToken = () => {
-      axiosClient.interceptors.request.use(async (config: any) => {
-        if (!accessToken) {
-          accessToken = await getAccessTokenSilently();
-        }
+    const getToken = async () => {
+      const token = await getAccessTokenSilently();
+      setAccessToken(token);
+    };
+    if (isAuthenticated) {
+      getToken();
+    }
+  }, [isAuthenticated]);
+  // アクセストークンを取得後にリクエストヘッダーに設定
+  useEffect(() => {
+    if (accessToken) {
+      axiosClient.interceptors.request.use((config: any) => {
         config.headers = {
           Authorization: "Bearer " + accessToken,
         };
         return config;
       });
-    };
-    if (isAuthenticated) {
-      console.log("axiosclient");
-      getToken();
+      setHasToken(true);
     }
-  }, [isAuthenticated]);
+  }, [accessToken]);
 
-  return <>{children}</>;
+  return (
+    <AxiosClientContext.Provider value={{ hasToken }}>
+      {children}
+    </AxiosClientContext.Provider>
+  );
 }

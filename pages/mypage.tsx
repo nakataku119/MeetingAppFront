@@ -1,33 +1,20 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { Team, User } from "@/utils/types";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 const MyPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
-  const { isAuthenticated } = useAuth0();
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { currentUser } = useContext(CurrentUserContext);
 
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("http://localhost:8080/users/me");
-      setCurrentUser(res.data);
-    };
-    if (isAuthenticated) {
-      fetchCurrentUser();
-    }
-  }, [isAuthenticated]);
 
   if (currentUser) {
     return (
