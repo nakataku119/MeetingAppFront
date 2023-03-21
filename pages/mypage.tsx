@@ -21,7 +21,7 @@ const MyPage: NextPage = () => {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("http://localhost:8080/users/me");
+      const res = await axiosClient.get("/users/me");
       setCurrentUser(res.data);
     };
     if (isAuthenticated) {

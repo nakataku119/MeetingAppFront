@@ -5,7 +5,7 @@ import { useEffect } from "react";
 let accessToken = "";
 
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
 });
