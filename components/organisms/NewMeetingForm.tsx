@@ -88,13 +88,17 @@ export default function SignupForm() {
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
         />
+        {!selectedTeam && (
+          <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
+            チームを選択してください。
+          </Alert>
+        )}
         <Box
           sx={{ border: 1, borderRadius: 2, height: 100, padding: 0.5, mb: 1 }}
         >
           <Typography component="h1" sx={{ width: "100%", fontSize: 3 }}>
             招待メンバー
           </Typography>
-
           {invitedMembers.map((user: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
@@ -114,15 +118,10 @@ export default function SignupForm() {
           id="user-name"
           label="Name"
           variant="filled"
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", pb: 1 }}
           disabled={!selectedTeam}
           onChange={(event) => handleChangeText(event.target.value)}
         />
-        {!selectedTeam && (
-          <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
-            チームを選択してください。
-          </Alert>
-        )}
         {candidateMembers?.map((user: User, index: number) => (
           <MenuItem
             key={index}
