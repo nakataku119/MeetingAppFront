@@ -18,16 +18,16 @@ const MyPage: NextPage = () => {
     setTeamMembers(team.users);
   };
 
-  useEffect(() => {
-    console.log(hasToken);
-    const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("/users/me");
-      setCurrentUser(res.data);
-    };
-    if (hasToken) {
-      fetchCurrentUser();
-    }
-  }, [hasToken]);
+  // useEffect(() => {
+  //   console.log(hasToken);
+  //   const fetchCurrentUser = async () => {
+  //     const res = await axiosClient.get("/users/me");
+  //     setCurrentUser(res.data);
+  //   };
+  //   if (hasToken) {
+  //     fetchCurrentUser();
+  //   }
+  // }, [hasToken]);
 
   if (currentUser) {
     return (
