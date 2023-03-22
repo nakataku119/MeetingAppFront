@@ -18,11 +18,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 
 export default function SignupForm() {
+  const [schedule, setSchedule] = useState<Date>();
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +57,7 @@ export default function SignupForm() {
   };
   const handleDialogConfirm = async () => {
     await axiosClient
-      .post("#", { users: invitedMembers })
+      .post("/mtgs", { users: invitedMembers, schedule: schedule })
       .then((res) => router.push("/mypage"))
       .catch((error) => setError("登録できません。"))
       .then(() => {
@@ -77,6 +79,11 @@ export default function SignupForm() {
         >
           ミーティングの作成
         </Typography>
+        <DateTimePicker
+          sx={{ width: "100%" }}
+          value={schedule}
+          onChange={(event) => setSchedule(event!)}
+        />
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}

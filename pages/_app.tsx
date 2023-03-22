@@ -6,6 +6,8 @@ import AppHeader from "@/components/organisms/AppHeader";
 import AppFooter from "@/components/organisms/AppFooter";
 import styles from "@/styles/Home.module.css";
 import CurrentUserProvider from "@/contexts/CurrentUserProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function App({ Component, pageProps }: AppProps) {
   const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/signup`;
@@ -20,13 +22,15 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <AxiosClientProvider>
         <CurrentUserProvider>
-          <>
-            <AppHeader />
-            <main className={styles.main}>
-              <Component {...pageProps} />
-            </main>
-            <AppFooter />
-          </>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <>
+              <AppHeader />
+              <main className={styles.main}>
+                <Component {...pageProps} />
+              </main>
+              <AppFooter />
+            </>
+          </LocalizationProvider>
         </CurrentUserProvider>
       </AxiosClientProvider>
     </Auth0Provider>
