@@ -1,16 +1,18 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Team, User } from "@/utils/types";
+import { Agenda, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
   Box,
   Button,
+  Checkbox,
   Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   MenuItem,
   OutlinedInput,
   Paper,
@@ -22,16 +24,25 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
+import AgendaSelectFrom from "./AgendaSelectForm";
 
 export default function SignupForm() {
   const [schedule, setSchedule] = useState<Date>();
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
+  const [checkedAgenda, setCheckedAgenda] = useState<Array<string>>([]);
   const [error, setError] = useState<string | null>(null);
   const [invitedMembers, setInvitedMembers] = useState<Array<User>>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
   const router = useRouter();
+  const handleChangeAgendas = (agenda: string) => {
+    if (!checkedAgenda.includes(agenda)) {
+      setCheckedAgenda([...checkedAgenda, agenda]);
+    } else {
+      setCheckedAgenda(checkedAgenda.filter((item) => item === agenda));
+    }
+  };
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setDialogOpen(true);
@@ -57,7 +68,11 @@ export default function SignupForm() {
   };
   const handleDialogConfirm = async () => {
     await axiosClient
-      .post("/mtgs", { users: invitedMembers, schedule: schedule })
+      .post("/mtgs", {
+        users: invitedMembers.map((member) => ({ id: member.id })),
+        schedule: schedule,
+        agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
+      })
       .then((res) => router.push("/mypage"))
       .catch((error) => setError("登録できません。"))
       .then(() => {
@@ -131,6 +146,10 @@ export default function SignupForm() {
             {user.name}
           </MenuItem>
         ))}
+        <AgendaSelectFrom
+          onChange={handleChangeAgendas}
+          disabled={!selectedTeam}
+        />
         {error && <p>{error}</p>}
         <Button
           type="submit"
