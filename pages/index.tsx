@@ -1,5 +1,6 @@
 import Head from "next/head";
 import LoginOrSingupButton from "@/components/organisms/LoginOrSignupButton";
+import { Link } from "@mui/material";
 
 export default function Home() {
   return (
@@ -10,6 +11,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Link href="/guest" sx={{ mb: 3 }}>
+        ゲストログイン
+      </Link>
       <LoginOrSingupButton />
     </>
   );
