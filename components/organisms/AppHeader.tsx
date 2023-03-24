@@ -18,9 +18,9 @@ export default function AppHeader() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/">LOGO LOGO</Link>
           </Typography>
-          {isAuthenticated ? (
+          {currentUser ? (
             <>
-              <p>name: {currentUser?.name}</p>
+              <p>name: {currentUser.name}</p>
               <Button color="inherit" onClick={() => logout()} sx={{ pl: 5 }}>
                 ログアウト
               </Button>
