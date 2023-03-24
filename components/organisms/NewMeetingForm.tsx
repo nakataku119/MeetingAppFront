@@ -72,6 +72,7 @@ export default function SignupForm() {
         users: invitedMembers.map((member) => ({ id: member.id })),
         schedule: schedule,
         agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
+        team: selectedTeam!.id,
       })
       .then((res) => router.push("/mypage"))
       .catch((error) => setError("登録できません。"))
