@@ -3,7 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { createContext, useEffect, useState } from "react";
 
 export const axiosClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL:
+    "http://meetingapp-env.eba-kamtpjmj.ap-northeast-1.elasticbeanstalk.com",
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
 });
@@ -24,23 +25,6 @@ export function AxiosClientProvider({
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [accessToken, setAccessToken] = useState("");
   const [hasToken, setHasToken] = useState(false);
-  // useEffect(() => {
-  //   const getToken = () => {
-  //     axiosClient.interceptors.request.use(async (config: any) => {
-  //       if (!accessToken) {
-  //         accessToken = await getAccessTokenSilently();
-  //       }
-  //       config.headers = {
-  //         Authorization: "Bearer " + accessToken,
-  //       };
-  //       return config;
-  //     });
-  //   };
-  //   if (isAuthenticated) {
-  //     console.log("axiosclient");
-  //     getToken();
-  //   }
-  // }, [isAuthenticated]);
   // 認証済みの場合にアクセストークンを取得
   useEffect(() => {
     const getToken = async () => {
