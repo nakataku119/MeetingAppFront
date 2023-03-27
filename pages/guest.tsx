@@ -1,12 +1,13 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
+import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
-import { Team, User } from "@/utils/types";
-import { Box, Button, Typography } from "@mui/material";
+import { Mtg, Team, User } from "@/utils/types";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -25,6 +26,35 @@ const GuestPage: NextPage = () => {
     };
     fetchCurrentUser();
   }, []);
+
+  const MeetingCardList = () => {
+    const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    return (
+      <Box sx={{ height: "40%", display: "flex" }}>
+        {planedMeetings.map((item: Mtg, index: number) => (
+          <>
+            <MeetingCard
+              meeting={item}
+              onClickEdit={() => {
+                setIsDialogOpen(true);
+                console.log(item.schedule);
+                console.log(String(item.schedule));
+                console.log(item);
+              }}
+            />
+            <MeetingFormDialog
+              open={isDialogOpen}
+              meeting={item}
+              onClickCancel={() => {
+                setIsDialogOpen(false);
+                console.log(item);
+              }}
+            />
+          </>
+        ))}
+      </Box>
+    );
+  };
 
   if (currentUser) {
     return (
@@ -45,9 +75,7 @@ const GuestPage: NextPage = () => {
             onClickCancel={() => setIsDialogOpen(false)}
           />
         </Box>
-        <MeetingCardContainer
-          joinedMtgs={getPlanedMeetings(currentUser.mtgs)}
-        />
+        <MeetingCardList />
         <Box sx={{ display: "flex", p: 1 }}>
           <Typography
             variant="h5"
