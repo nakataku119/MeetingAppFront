@@ -1,6 +1,6 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Mtg, Team, User } from "@/utils/types";
+import { Agenda, Mtg, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
@@ -25,102 +25,120 @@ type Props = {
   onClickCancel: () => void;
 };
 
+type MeetingData = {
+  schedule: Date | null;
+  team: Team | null;
+  members: Array<User>;
+  newAgendas: { agenda: string }[];
+  deletedAgendasId: number[];
+};
+
 export default function MeetingFormDialog(props: Props) {
-  const [meeting, setMeeting] = useState<Mtg | null>(props.meeting || null);
-  const [schedule, setSchedule] = useState<string>(
-    String(props.meeting?.schedule).slice(0, 16) || ""
-  );
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(
-    props.meeting?.team || null
-  );
-  const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
+  const { currentUser } = useContext(CurrentUserContext);
+  const router = useRouter();
+  const [meetingData, setMeetingData] = useState<MeetingData>({
+    schedule: props.meeting?.schedule || null,
+    team: props.meeting?.team || null,
+    members: props.meeting?.users || [currentUser],
+    newAgendas: [],
+    deletedAgendasId: [],
+  } as MeetingData);
   const [checkedAgenda, setCheckedAgenda] = useState<Array<string>>(
     props.meeting?.agendas.map((agenda) => agenda.agenda) || []
   );
+  const initialAgendaTitles =
+    props.meeting?.agendas.map((agenda) => agenda.agenda) || [];
+  const filterNewAgendas = (agendas: Array<string>) => {
+    return agendas
+      .filter((agenda) => !initialAgendaTitles.includes(agenda))
+      .map((agenda) => ({ agenda: agenda }));
+  };
+  const filterDeletedAgendasId = (agendas: Array<string>) => {
+    return props.meeting?.agendas
+      .filter((agenda) => !agendas.includes(agenda.agenda))
+      .map((agenda) => agenda.id);
+  };
+  // ユーザーの入力に対する予測変換
+  const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
   const [error, setError] = useState<string | null>(null);
-  const [invitedMembers, setInvitedMembers] = useState<Array<User>>(
-    props.meeting?.users || []
-  );
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const { currentUser } = useContext(CurrentUserContext);
-  const router = useRouter();
-  const handleChangeAgendas = (agenda: string) => {
-    if (!checkedAgenda.includes(agenda)) {
-      setCheckedAgenda([...checkedAgenda, agenda]);
-    } else {
-      setCheckedAgenda(checkedAgenda.filter((item) => item !== agenda));
-    }
-  };
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    setDialogOpen(true);
-  };
   const handleSelectTeam = (team: Team) => {
-    setSelectedTeam(team);
-  };
-  const handleSelectUser = (user: User) => {
-    if (!invitedMembers.includes(user)) {
-      setInvitedMembers([...invitedMembers, user]);
-      setCandidateMembars([]);
-    }
+    setMeetingData(Object.assign({}, meetingData, { team: team }));
   };
   const handleChangeText = (name: string) => {
-    if (selectedTeam) {
+    if (meetingData.team) {
       setCandidateMembars(
-        selectedTeam.users.filter((membar) => membar.name.includes(name))
+        meetingData.team.users.filter((membar) => membar.name.includes(name))
       );
     }
   };
-  const handleDialogCancel = async () => {
-    setDialogOpen(false);
+  const handleSelectUser = (user: User) => {
+    if (!meetingData.members.includes(user)) {
+      setCandidateMembars([]);
+      setMeetingData(
+        Object.assign({}, meetingData, {
+          members: [...meetingData.members, user],
+        })
+      );
+    }
+  };
+  const handleChangeAgendas = async (agenda: string) => {
+    await setCheckedAgenda(
+      checkedAgenda.includes(agenda)
+        ? checkedAgenda.filter((item) => item !== agenda)
+        : [...checkedAgenda, agenda]
+    );
+    await setMeetingData(
+      Object.assign({}, meetingData, {
+        newAgendas: filterNewAgendas(checkedAgenda),
+        deletedAgendasId: filterDeletedAgendasId(checkedAgenda),
+      })
+    );
+  };
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
   };
   const handleDialogConfirm = async () => {
     await axiosClient
-      .post("/mtgs", {
-        users: invitedMembers.map((member) => ({ id: member.id })),
-        schedule: new Date(schedule),
-        agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
-        team: selectedTeam!.id,
+      .post("/#", {
+        data: meetingData,
       })
       .then((res) => router.push("/mypage"))
       .catch((error) => setError("登録できません。"))
-      .then(() => {
-        setDialogOpen(false);
-      });
+      .then(() => {});
   };
   const handleEditConfirm = async () => {
-    const meetingAgendaTitles = props.meeting!.agendas.map(
-      (item) => item.agenda
-    );
-    const newAgendaTitle = checkedAgenda.filter(
-      (agenda) => !meetingAgendaTitles.includes(agenda)
-    );
-    const deletedAgendas = props.meeting?.agendas.filter(
-      (agenda) => !checkedAgenda.includes(agenda.agenda)
-    );
-    await axiosClient
-      .put(`/mtgs/${props.meeting?.id}`, {
-        users: invitedMembers.map((member) => ({ id: member.id })),
-        schedule: new Date(schedule),
-        agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
-        team: selectedTeam!.id,
-      })
-      .then((res) => router.push("/mypage"))
-      .catch((error) => setError("登録できません。"))
-      .then(() => {
-        setDialogOpen(false);
-      });
-    await axiosClient
-      .delete("/agendas", {
-        data: {
-          agendas: deletedAgendas?.map((agenda) => agenda.id),
-        },
-      })
-      .then((res) => router.push("/mypage"))
-      .catch((error) => setError("登録できません。"))
-      .then(() => {
-        setDialogOpen(false);
-      });
+    // const meetingAgendaTitles = props.meeting!.agendas.map(
+    //   (item) => item.agenda
+    // );
+    // const newAgendaTitle = checkedAgenda.filter(
+    //   (agenda) => !meetingAgendaTitles.includes(agenda)
+    // );
+    // const deletedAgendas = props.meeting?.agendas.filter(
+    //   (agenda) => !checkedAgenda.includes(agenda.agenda)
+    // );
+    // // await axiosClient
+    //   .put(`/mtgs/${props.meeting?.id}`, {
+    //     users: invitedMembers.map((member) => ({ id: member.id })),
+    //     schedule: new Date(schedule),
+    //     agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
+    //     team: selectedTeam!.id,
+    //   })
+    //   .then((res) => router.push("/mypage"))
+    //   .catch((error) => setError("登録できません。"))
+    //   .then(() => {
+    //     setDialogOpen(false);
+    //   });
+    // await axiosClient
+    //   .delete("/agendas", {
+    //     data: {
+    //       agendas: deletedAgendas?.map((agenda) => agenda.id),
+    //     },
+    //   })
+    //   .then((res) => router.push("/mypage"))
+    //   .catch((error) => setError("登録できません。"))
+    //   .then(() => {
+    //     setDialogOpen(false);
+    //   });
   };
   return (
     <Dialog open={props.open}>
@@ -140,16 +158,24 @@ export default function MeetingFormDialog(props: Props) {
         <TextField
           type={"datetime-local"}
           sx={{ width: "100%" }}
-          value={schedule}
+          value={
+            meetingData.schedule
+              ? new Date(meetingData.schedule).toISOString().slice(0, 16)
+              : ""
+          }
           onChange={(event) => {
-            setSchedule(event.target.value);
+            setMeetingData(
+              Object.assign({}, meetingData, {
+                schedule: new Date(event.target.value),
+              })
+            );
           }}
         />
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
         />
-        {!selectedTeam && (
+        {!meetingData.team && (
           <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
             チームを選択してください。
           </Alert>
@@ -160,14 +186,18 @@ export default function MeetingFormDialog(props: Props) {
           <Typography component="h1" sx={{ width: "100%", fontSize: 3 }}>
             招待メンバー
           </Typography>
-          {invitedMembers.map((user: User, index: number) => (
+          {meetingData.members.map((user: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
               label={user.name}
               sx={{ margin: 0.2 }}
               onDelete={() => {
-                setInvitedMembers(
-                  invitedMembers.filter((member) => member.id != user.id)
+                setMeetingData(
+                  Object.assign({}, meetingData, {
+                    members: meetingData.members.filter(
+                      (member) => member.id != user.id
+                    ),
+                  })
                 );
               }}
               size="small"
@@ -180,7 +210,7 @@ export default function MeetingFormDialog(props: Props) {
           label="Name"
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
-          disabled={!selectedTeam}
+          disabled={!meetingData.team}
           onChange={(event) => handleChangeText(event.target.value)}
         />
         {candidateMembers?.map((user: User, index: number) => (
@@ -194,7 +224,7 @@ export default function MeetingFormDialog(props: Props) {
         ))}
         <AgendaSelectFrom
           onChange={handleChangeAgendas}
-          disabled={!selectedTeam}
+          disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
         />
         {error && <p>{error}</p>}
