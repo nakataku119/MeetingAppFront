@@ -7,8 +7,12 @@ import { Avatar, Chip, Paper } from "@mui/material";
 import { Agenda, Mtg, User } from "@/utils/types";
 import { dateFormatter } from "@/utils/functions";
 
-export default function MeetingCard(props: { meeting: Mtg }) {
-  const { meeting } = props;
+type Props = {
+  meeting: Mtg;
+  onClickEdit: () => void;
+};
+
+export default function MeetingCard(props: Props) {
   return (
     <Paper
       elevation={3}
@@ -19,13 +23,13 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          {dateFormatter(meeting.schedule)}
+          {dateFormatter(props.meeting.schedule)}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー
         </Typography>
         <Box sx={{ border: 1, borderRadius: 2, height: "30%", padding: 0.5 }}>
-          {meeting.users.map((item: User, index: number) => (
+          {props.meeting.users.map((item: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
               label={item.name}
@@ -40,13 +44,13 @@ export default function MeetingCard(props: { meeting: Mtg }) {
           トピック
         </Typography>
         <Box sx={{ height: "30%" }}>
-          {meeting.agendas.map((item: Agenda, index: number) => (
+          {props.meeting.agendas.map((item: Agenda, index: number) => (
             <li key={index}>{item.agenda}</li>
           ))}
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
-        <Button size="small" variant="outlined">
+        <Button size="small" variant="outlined" onClick={props.onClickEdit}>
           詳細・編集
         </Button>
       </Box>
