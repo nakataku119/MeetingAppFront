@@ -15,7 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { FormEvent, memo, useContext, useState } from "react";
+import { FormEvent, memo, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 
@@ -81,19 +81,21 @@ export default function MeetingFormDialog(props: Props) {
       );
     }
   };
-  const handleChangeAgendas = async (agenda: string) => {
-    await setCheckedAgenda(
+  const handleChangeAgendas = (agenda: string) => {
+    setCheckedAgenda(
       checkedAgenda.includes(agenda)
         ? checkedAgenda.filter((item) => item !== agenda)
         : [...checkedAgenda, agenda]
     );
-    await setMeetingData(
+  };
+  useEffect(() => {
+    setMeetingData(
       Object.assign({}, meetingData, {
         newAgendas: filterNewAgendas(checkedAgenda),
         deletedAgendasId: filterDeletedAgendasId(checkedAgenda),
       })
     );
-  };
+  }, [checkedAgenda]);
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
   };
