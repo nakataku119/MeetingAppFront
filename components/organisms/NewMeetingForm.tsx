@@ -27,7 +27,7 @@ import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 
 export default function SignupForm() {
-  const [schedule, setSchedule] = useState<Date>();
+  const [schedule, setSchedule] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
   const [checkedAgenda, setCheckedAgenda] = useState<Array<string>>([]);
@@ -95,10 +95,13 @@ export default function SignupForm() {
         >
           ミーティングの作成
         </Typography>
-        <DateTimePicker
+        <TextField
+          type={"datetime-local"}
           sx={{ width: "100%" }}
           value={schedule}
-          onChange={(event) => setSchedule(event!)}
+          onChange={(event) => {
+            setSchedule(event.target.value);
+          }}
         />
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
