@@ -1,22 +1,16 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Agenda, Mtg, Team, User } from "@/utils/types";
+import { Mtg, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
   Box,
   Button,
-  Checkbox,
   Chip,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
   MenuItem,
-  OutlinedInput,
   Paper,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -167,6 +161,7 @@ export default function MeetingFormDialog(props: Props) {
         <AgendaSelectFrom
           onChange={handleChangeAgendas}
           disabled={!selectedTeam}
+          checkedAgendas={checkedAgenda}
         />
         {error && <p>{error}</p>}
         <Button
