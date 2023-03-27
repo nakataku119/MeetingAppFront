@@ -32,6 +32,7 @@ type Props = {
 };
 
 export default function MeetingFormDialog(props: Props) {
+  const [meeting, setMeeting] = useState<Mtg | null>(props.meeting || null);
   const [schedule, setSchedule] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
@@ -75,7 +76,7 @@ export default function MeetingFormDialog(props: Props) {
     await axiosClient
       .post("/mtgs", {
         users: invitedMembers.map((member) => ({ id: member.id })),
-        schedule: schedule,
+        schedule: new Date(schedule),
         agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
         team: selectedTeam!.id,
       })
@@ -164,6 +165,7 @@ export default function MeetingFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
+          onClick={handleDialogConfirm}
         >
           登録
         </Button>
