@@ -33,12 +33,20 @@ type Props = {
 
 export default function MeetingFormDialog(props: Props) {
   const [meeting, setMeeting] = useState<Mtg | null>(props.meeting || null);
-  const [schedule, setSchedule] = useState<string>("");
-  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [schedule, setSchedule] = useState<string>(
+    String(props.meeting?.schedule).slice(0, 16) || ""
+  );
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(
+    props.meeting?.team || null
+  );
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
-  const [checkedAgenda, setCheckedAgenda] = useState<Array<string>>([]);
+  const [checkedAgenda, setCheckedAgenda] = useState<Array<string>>(
+    props.meeting?.agendas.map((agenda) => agenda.agenda) || []
+  );
   const [error, setError] = useState<string | null>(null);
-  const [invitedMembers, setInvitedMembers] = useState<Array<User>>([]);
+  const [invitedMembers, setInvitedMembers] = useState<Array<User>>(
+    props.meeting?.users || []
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
   const { currentUser } = useContext(CurrentUserContext);
   const router = useRouter();

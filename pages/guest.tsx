@@ -14,7 +14,7 @@ import React, { useContext, useEffect, useState } from "react";
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false);
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
@@ -31,27 +31,27 @@ const GuestPage: NextPage = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     return (
       <Box sx={{ height: "40%", display: "flex" }}>
-        {planedMeetings.map((item: Mtg, index: number) => (
-          <>
-            <MeetingCard
-              meeting={item}
-              onClickEdit={() => {
-                setIsDialogOpen(true);
-                console.log(item.schedule);
-                console.log(String(item.schedule));
-                console.log(item);
-              }}
-            />
-            <MeetingFormDialog
-              open={isDialogOpen}
-              meeting={item}
-              onClickCancel={() => {
-                setIsDialogOpen(false);
-                console.log(item);
-              }}
-            />
-          </>
-        ))}
+        {planedMeetings.map((item: Mtg, index: number) => {
+          const [isEditDialogOpen, setIsEditDialogOpen] =
+            useState<boolean>(false);
+          return (
+            <>
+              <MeetingCard
+                meeting={item}
+                onClickEdit={() => {
+                  setIsEditDialogOpen(true);
+                }}
+              />
+              <MeetingFormDialog
+                open={isEditDialogOpen}
+                meeting={item}
+                onClickCancel={() => {
+                  setIsEditDialogOpen(false);
+                }}
+              />
+            </>
+          );
+        })}
       </Box>
     );
   };
@@ -66,13 +66,13 @@ const GuestPage: NextPage = () => {
           <Button
             size="small"
             variant="outlined"
-            onClick={() => setIsDialogOpen(true)}
+            onClick={() => setIsNewDialogOpen(true)}
           >
             新規ミーティングを設定
           </Button>
           <MeetingFormDialog
-            open={isDialogOpen}
-            onClickCancel={() => setIsDialogOpen(false)}
+            open={isNewDialogOpen}
+            onClickCancel={() => setIsNewDialogOpen(false)}
           />
         </Box>
         <MeetingCardList />
