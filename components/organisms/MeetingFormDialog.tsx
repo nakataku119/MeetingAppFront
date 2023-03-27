@@ -20,13 +20,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DateTimePicker } from "@mui/x-date-pickers";
 import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 
-export default function SignupForm() {
+export default function MeetingFormDialog(props: any) {
   const [schedule, setSchedule] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
@@ -81,7 +80,7 @@ export default function SignupForm() {
       });
   };
   return (
-    <>
+    <Dialog open={props.open}>
       <Paper
         elevation={3}
         component="form"
@@ -162,22 +161,11 @@ export default function SignupForm() {
         >
           登録
         </Button>
-      </Paper>
-
-      <Dialog open={dialogOpen}>
-        <DialogTitle>登録確認</DialogTitle>
-        <DialogContent>
-          <p>以下の内容で登録しますか？</p>
-        </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogCancel} color="secondary">
-            キャンセル
-          </Button>
-          <Button onClick={handleDialogConfirm} color="primary">
-            登録
-          </Button>
+          <Button onClick={props.onClickCancel}>Cancel</Button>
+          <Button>Subscribe</Button>
         </DialogActions>
-      </Dialog>
-    </>
+      </Paper>
+    </Dialog>
   );
 }

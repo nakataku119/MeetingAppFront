@@ -2,6 +2,7 @@ import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
+import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { Team, User } from "@/utils/types";
@@ -13,6 +14,7 @@ const MyPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { hasToken } = useContext(AxiosClientContext);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
@@ -36,9 +38,17 @@ const MyPage: NextPage = () => {
           <Typography variant="h5" component="h1" color="text.secondary">
             今後のミーティング
           </Typography>
-          <Button size="small" variant="outlined">
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => setIsDialogOpen(true)}
+          >
             新規ミーティングを設定
           </Button>
+          <MeetingFormDialog
+            open={isDialogOpen}
+            onClickCancel={() => setIsDialogOpen(false)}
+          />
         </Box>
         <MeetingCardContainer
           joinedMtgs={getPlanedMeetings(currentUser.mtgs)}
