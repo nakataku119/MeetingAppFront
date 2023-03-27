@@ -1,6 +1,6 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Agenda, Team, User } from "@/utils/types";
+import { Agenda, Mtg, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
@@ -25,7 +25,13 @@ import { FormEvent, memo, useContext, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 
-export default function MeetingFormDialog(props: any) {
+type Props = {
+  meeting?: Mtg;
+  open: boolean;
+  onClickCancel: () => void;
+};
+
+export default function MeetingFormDialog(props: Props) {
   const [schedule, setSchedule] = useState<string>("");
   const [selectedTeam, setSelectedTeam] = useState<Team>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
