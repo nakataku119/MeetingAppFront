@@ -14,6 +14,7 @@ export type Team = {
 export type Mtg = {
   id: number;
   schedule: Date;
+  team: Team;
   agendas: Agenda[];
   users: User[];
 };
