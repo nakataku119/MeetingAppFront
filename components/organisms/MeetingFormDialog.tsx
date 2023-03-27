@@ -48,7 +48,7 @@ export default function MeetingFormDialog(props: Props) {
     if (!checkedAgenda.includes(agenda)) {
       setCheckedAgenda([...checkedAgenda, agenda]);
     } else {
-      setCheckedAgenda(checkedAgenda.filter((item) => item === agenda));
+      setCheckedAgenda(checkedAgenda.filter((item) => item !== agenda));
     }
   };
   const handleSubmit = async (event: FormEvent) => {

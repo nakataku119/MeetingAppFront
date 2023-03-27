@@ -23,7 +23,7 @@ export default function AgendaSelectFrom(props: Prop) {
         <FormControlLabel
           control={
             <Checkbox
-              onChange={(event) => props.onChange(event.target.value)}
+              onChange={() => props.onChange(agenda)}
               value={agenda}
               color="primary"
               disabled={props.disabled}
