@@ -89,12 +89,32 @@ export default function MeetingFormDialog(props: Props) {
       });
   };
   const handleEditConfirm = async () => {
+    const meetingAgendaTitles = props.meeting!.agendas.map(
+      (item) => item.agenda
+    );
+    const newAgendaTitle = checkedAgenda.filter(
+      (agenda) => !meetingAgendaTitles.includes(agenda)
+    );
+    const deletedAgendas = props.meeting?.agendas.filter(
+      (agenda) => !checkedAgenda.includes(agenda.agenda)
+    );
     await axiosClient
       .put(`/mtgs/${props.meeting?.id}`, {
         users: invitedMembers.map((member) => ({ id: member.id })),
         schedule: new Date(schedule),
-        agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
+        agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
         team: selectedTeam!.id,
+      })
+      .then((res) => router.push("/mypage"))
+      .catch((error) => setError("登録できません。"))
+      .then(() => {
+        setDialogOpen(false);
+      });
+    await axiosClient
+      .delete("/agendas", {
+        data: {
+          agendas: deletedAgendas?.map((agenda) => agenda.id),
+        },
       })
       .then((res) => router.push("/mypage"))
       .catch((error) => setError("登録できません。"))
