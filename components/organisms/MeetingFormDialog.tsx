@@ -88,6 +88,20 @@ export default function MeetingFormDialog(props: Props) {
         setDialogOpen(false);
       });
   };
+  const handleEditConfirm = async () => {
+    await axiosClient
+      .put(`/mtgs/${props.meeting?.id}`, {
+        users: invitedMembers.map((member) => ({ id: member.id })),
+        schedule: new Date(schedule),
+        agendas: checkedAgenda.map((agenda) => ({ agenda: agenda })),
+        team: selectedTeam!.id,
+      })
+      .then((res) => router.push("/mypage"))
+      .catch((error) => setError("登録できません。"))
+      .then(() => {
+        setDialogOpen(false);
+      });
+  };
   return (
     <Dialog open={props.open}>
       <Paper
@@ -171,6 +185,14 @@ export default function MeetingFormDialog(props: Props) {
           onClick={handleDialogConfirm}
         >
           登録
+        </Button>
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{ width: "100%", padding: "10px" }}
+          onClick={handleEditConfirm}
+        >
+          更新
         </Button>
         <DialogActions>
           <Button onClick={props.onClickCancel}>Cancel</Button>
