@@ -6,13 +6,15 @@ import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
 import { Agenda, Mtg, User } from "@/utils/types";
 import { dateFormatter } from "@/utils/functions";
+import MeetingFormDialog from "./MeetingFormDialog";
+import { useState } from "react";
 
 type Props = {
   meeting: Mtg;
-  onClickEdit: () => void;
 };
 
 export default function MeetingCard(props: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Paper
       elevation={3}
@@ -50,10 +52,17 @@ export default function MeetingCard(props: Props) {
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
-        <Button size="small" variant="outlined" onClick={props.onClickEdit}>
+        <Button size="small" variant="outlined" onClick={() => setIsOpen(true)}>
           詳細・編集
         </Button>
       </Box>
+      <MeetingFormDialog
+        open={isOpen}
+        meeting={props.meeting}
+        onClickCancel={() => {
+          setIsOpen(false);
+        }}
+      />
     </Paper>
   );
 }

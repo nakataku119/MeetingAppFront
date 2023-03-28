@@ -32,25 +32,7 @@ const GuestPage: NextPage = () => {
     return (
       <Box sx={{ height: "40%", display: "flex" }}>
         {planedMeetings.map((item: Mtg, index: number) => {
-          const [isEditDialogOpen, setIsEditDialogOpen] =
-            useState<boolean>(false);
-          return (
-            <>
-              <MeetingCard
-                meeting={item}
-                onClickEdit={() => {
-                  setIsEditDialogOpen(true);
-                }}
-              />
-              <MeetingFormDialog
-                open={isEditDialogOpen}
-                meeting={item}
-                onClickCancel={() => {
-                  setIsEditDialogOpen(false);
-                }}
-              />
-            </>
-          );
+          return <MeetingCard meeting={item} key={index} />;
         })}
       </Box>
     );
