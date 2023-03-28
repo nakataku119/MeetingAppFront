@@ -32,8 +32,31 @@ const GuestPage: NextPage = () => {
     // .catch((error) => setError("登録できません。"))
     // .then(() => {});
   };
-  const handleUpdateMeeting = (meetingDate: MeetingData) => {
-    console.log(meetingDate.schedule);
+  const handleUpdateMeeting = async (meetingData: MeetingData) => {
+    const reqData = {
+      schedule: new Date(meetingData.schedule!),
+      teamId: meetingData.team?.id,
+      users: meetingData.members.map((member) => ({ id: member.id })),
+      agendas: meetingData.newAgendas,
+    };
+    await axiosClient.put(`/mtgs/${meetingData.id}`, {
+      data: reqData,
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {
+    //   setDialogOpen(false);
+    // });
+    await axiosClient.delete("/agendas", {
+      data: {
+        agendas: meetingData.deletedAgendasId,
+      },
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {
+    //   setDialogOpen(false);
+    // });
   };
 
   useEffect(() => {
