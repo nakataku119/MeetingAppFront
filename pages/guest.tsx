@@ -1,7 +1,6 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCard from "@/components/organisms/MeetingCard";
-import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
