@@ -161,7 +161,9 @@ export default function MeetingFormDialog(props: Props) {
           onChange={(event) => {
             setMeetingData(
               Object.assign({}, meetingData, {
-                schedule: new Date(event.target.value),
+                schedule: new Date(event.target.value)
+                  .toISOString()
+                  .slice(0, 16),
               })
             );
           }}
