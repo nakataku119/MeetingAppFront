@@ -11,6 +11,7 @@ import { useState } from "react";
 
 type Props = {
   meeting: Mtg;
+  onClickDialogSubmit: () => void;
 };
 
 export default function MeetingCard(props: Props) {
@@ -62,6 +63,7 @@ export default function MeetingCard(props: Props) {
         onClickCancel={() => {
           setIsOpen(false);
         }}
+        onClickSubmit={props.onClickDialogSubmit}
       />
     </Paper>
   );

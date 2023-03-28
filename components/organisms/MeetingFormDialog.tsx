@@ -23,6 +23,7 @@ type Props = {
   meeting?: Mtg;
   open: boolean;
   onClickCancel: () => void;
+  onClickSubmit: (meetingData: MeetingData) => void;
 };
 
 type MeetingData = {
@@ -99,49 +100,49 @@ export default function MeetingFormDialog(props: Props) {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
   };
-  const handleDialogConfirm = async () => {
-    await axiosClient
-      .post("/#", {
-        data: meetingData,
-      })
-      .then((res) => router.push("/mypage"))
-      .catch((error) => setError("登録できません。"))
-      .then(() => {});
-  };
-  const handleEditConfirm = async () => {
-    // const meetingAgendaTitles = props.meeting!.agendas.map(
-    //   (item) => item.agenda
-    // );
-    // const newAgendaTitle = checkedAgenda.filter(
-    //   (agenda) => !meetingAgendaTitles.includes(agenda)
-    // );
-    // const deletedAgendas = props.meeting?.agendas.filter(
-    //   (agenda) => !checkedAgenda.includes(agenda.agenda)
-    // );
-    // // await axiosClient
-    //   .put(`/mtgs/${props.meeting?.id}`, {
-    //     users: invitedMembers.map((member) => ({ id: member.id })),
-    //     schedule: new Date(schedule),
-    //     agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
-    //     team: selectedTeam!.id,
-    //   })
-    //   .then((res) => router.push("/mypage"))
-    //   .catch((error) => setError("登録できません。"))
-    //   .then(() => {
-    //     setDialogOpen(false);
-    //   });
-    // await axiosClient
-    //   .delete("/agendas", {
-    //     data: {
-    //       agendas: deletedAgendas?.map((agenda) => agenda.id),
-    //     },
-    //   })
-    //   .then((res) => router.push("/mypage"))
-    //   .catch((error) => setError("登録できません。"))
-    //   .then(() => {
-    //     setDialogOpen(false);
-    //   });
-  };
+  // const handleDialogConfirm = async () => {
+  //   await axiosClient
+  //     .post("/#", {
+  //       data: meetingData,
+  //     })
+  //     .then((res) => router.push("/mypage"))
+  //     .catch((error) => setError("登録できません。"))
+  //     .then(() => {});
+  // };
+  // const handleEditConfirm = async () => {
+  // const meetingAgendaTitles = props.meeting!.agendas.map(
+  //   (item) => item.agenda
+  // );
+  // const newAgendaTitle = checkedAgenda.filter(
+  //   (agenda) => !meetingAgendaTitles.includes(agenda)
+  // );
+  // const deletedAgendas = props.meeting?.agendas.filter(
+  //   (agenda) => !checkedAgenda.includes(agenda.agenda)
+  // );
+  // // await axiosClient
+  //   .put(`/mtgs/${props.meeting?.id}`, {
+  //     users: invitedMembers.map((member) => ({ id: member.id })),
+  //     schedule: new Date(schedule),
+  //     agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
+  //     team: selectedTeam!.id,
+  //   })
+  //   .then((res) => router.push("/mypage"))
+  //   .catch((error) => setError("登録できません。"))
+  //   .then(() => {
+  //     setDialogOpen(false);
+  //   });
+  // await axiosClient
+  //   .delete("/agendas", {
+  //     data: {
+  //       agendas: deletedAgendas?.map((agenda) => agenda.id),
+  //     },
+  //   })
+  //   .then((res) => router.push("/mypage"))
+  //   .catch((error) => setError("登録できません。"))
+  //   .then(() => {
+  //     setDialogOpen(false);
+  //   });
+  // };
   return (
     <Dialog open={props.open}>
       <Paper
@@ -234,22 +235,18 @@ export default function MeetingFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={handleDialogConfirm}
+          onClick={() => props.onClickSubmit(meetingData)}
         >
           登録
         </Button>
         <Button
-          type="submit"
+          onClick={() => props.onClickCancel()}
           variant="outlined"
-          sx={{ width: "100%", padding: "10px" }}
-          onClick={handleEditConfirm}
+          color="error"
+          sx={{ width: "100%", padding: "10px", mt: 1 }}
         >
-          更新
+          Cancel
         </Button>
-        <DialogActions>
-          <Button onClick={props.onClickCancel}>Cancel</Button>
-          <Button>Subscribe</Button>
-        </DialogActions>
       </Paper>
     </Dialog>
   );

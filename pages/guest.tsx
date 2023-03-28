@@ -11,12 +11,26 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
+type MeetingData = {
+  schedule: Date | null;
+  team: Team | null;
+  members: Array<User>;
+  newAgendas: { agenda: string }[];
+  deletedAgendasId: number[];
+};
+
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false);
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
+  };
+  const handleCreateMeeting = (meetingDate: MeetingData) => {
+    console.log(meetingDate);
+  };
+  const handleUpdateMeeting = () => {
+    console.log("update");
   };
 
   useEffect(() => {
@@ -32,7 +46,13 @@ const GuestPage: NextPage = () => {
     return (
       <Box sx={{ height: "40%", display: "flex" }}>
         {planedMeetings.map((item: Mtg, index: number) => {
-          return <MeetingCard meeting={item} key={index} />;
+          return (
+            <MeetingCard
+              meeting={item}
+              key={index}
+              onClickDialogSubmit={handleUpdateMeeting}
+            />
+          );
         })}
       </Box>
     );
@@ -55,6 +75,7 @@ const GuestPage: NextPage = () => {
           <MeetingFormDialog
             open={isNewDialogOpen}
             onClickCancel={() => setIsNewDialogOpen(false)}
+            onClickSubmit={handleCreateMeeting}
           />
         </Box>
         <MeetingCardList />
