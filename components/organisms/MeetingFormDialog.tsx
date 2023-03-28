@@ -129,6 +129,7 @@ export default function MeetingFormDialog(props: Props) {
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
+          initialValue={props.meeting?.team}
         />
         {!meetingData.team && (
           <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
