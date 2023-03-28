@@ -4,7 +4,9 @@ import { Place } from "@mui/icons-material";
 // YYYY/MM/DD hh:mmでフォーマット
 export function dateFormatter(date: Date): string {
   const initDate = new Date(date);
-  return `${initDate.getFullYear()}/${initDate.getMonth()}/${initDate.getDate()} ${initDate.getHours()}:${initDate.getMinutes()}`;
+  return `${initDate.getFullYear()}/${
+    initDate.getMonth() + 1
+  }/${initDate.getDate()} ${initDate.getHours()}:${initDate.getMinutes()}`;
 }
 // 未来時間のミーティングを取得
 export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {

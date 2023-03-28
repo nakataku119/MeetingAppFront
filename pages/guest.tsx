@@ -1,18 +1,20 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
+import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
+import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
-import { Team, User } from "@/utils/types";
-import { Box, Button, Typography } from "@mui/material";
+import { Mtg, Team, User } from "@/utils/types";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-
+  const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false);
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
@@ -25,6 +27,17 @@ const GuestPage: NextPage = () => {
     fetchCurrentUser();
   }, []);
 
+  const MeetingCardList = () => {
+    const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    return (
+      <Box sx={{ height: "40%", display: "flex" }}>
+        {planedMeetings.map((item: Mtg, index: number) => {
+          return <MeetingCard meeting={item} key={index} />;
+        })}
+      </Box>
+    );
+  };
+
   if (currentUser) {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
@@ -32,13 +45,19 @@ const GuestPage: NextPage = () => {
           <Typography variant="h5" component="h1" color="text.secondary">
             今後のミーティング
           </Typography>
-          <Button size="small" variant="outlined">
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => setIsNewDialogOpen(true)}
+          >
             新規ミーティングを設定
           </Button>
+          <MeetingFormDialog
+            open={isNewDialogOpen}
+            onClickCancel={() => setIsNewDialogOpen(false)}
+          />
         </Box>
-        <MeetingCardContainer
-          joinedMtgs={getPlanedMeetings(currentUser.mtgs)}
-        />
+        <MeetingCardList />
         <Box sx={{ display: "flex", p: 1 }}>
           <Typography
             variant="h5"
