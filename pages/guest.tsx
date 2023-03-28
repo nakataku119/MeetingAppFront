@@ -18,11 +18,22 @@ const GuestPage: NextPage = () => {
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
-  const handleCreateMeeting = (meetingDate: MeetingData) => {
-    console.log(meetingDate);
+  const handleCreateMeeting = async (meetingData: MeetingData) => {
+    const reqData = {
+      schedule: new Date(meetingData.schedule!),
+      teamId: meetingData.team?.id,
+      users: meetingData.members.map((member) => ({ id: member.id })),
+      agendas: meetingData.newAgendas,
+    };
+    await axiosClient.post("/mtgs", {
+      data: reqData,
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {});
   };
   const handleUpdateMeeting = (meetingDate: MeetingData) => {
-    console.log(meetingDate);
+    console.log(meetingDate.schedule);
   };
 
   useEffect(() => {
