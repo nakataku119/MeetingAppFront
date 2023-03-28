@@ -29,8 +29,8 @@ const GuestPage: NextPage = () => {
   const handleCreateMeeting = (meetingDate: MeetingData) => {
     console.log(meetingDate);
   };
-  const handleUpdateMeeting = () => {
-    console.log("update");
+  const handleUpdateMeeting = (meetingDate: MeetingData) => {
+    console.log(meetingDate);
   };
 
   useEffect(() => {
