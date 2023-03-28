@@ -26,6 +26,7 @@ export type Agenda = {
 };
 
 export type MeetingData = {
+  id: number | null;
   schedule: Date | null;
   team: Team | null;
   members: Array<User>;

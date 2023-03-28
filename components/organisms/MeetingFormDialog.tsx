@@ -30,6 +30,7 @@ export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
   const router = useRouter();
   const [meetingData, setMeetingData] = useState<MeetingData>({
+    id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
     team: props.meeting?.team || null,
     members: props.meeting?.users || [currentUser],
