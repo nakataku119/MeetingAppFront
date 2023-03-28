@@ -4,18 +4,10 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
-import { Agenda, Mtg, Team, User } from "@/utils/types";
+import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
 import { dateFormatter } from "@/utils/functions";
 import MeetingFormDialog from "./MeetingFormDialog";
 import { useState } from "react";
-
-type MeetingData = {
-  schedule: Date | null;
-  team: Team | null;
-  members: Array<User>;
-  newAgendas: { agenda: string }[];
-  deletedAgendasId: number[];
-};
 
 type Props = {
   meeting: Mtg;

@@ -6,18 +6,10 @@ import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
-import { Mtg, Team, User } from "@/utils/types";
+import { MeetingData, Mtg, Team, User } from "@/utils/types";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
-
-type MeetingData = {
-  schedule: Date | null;
-  team: Team | null;
-  members: Array<User>;
-  newAgendas: { agenda: string }[];
-  deletedAgendasId: number[];
-};
 
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);

@@ -1,6 +1,6 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Agenda, Mtg, Team, User } from "@/utils/types";
+import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
@@ -24,14 +24,6 @@ type Props = {
   open: boolean;
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
-};
-
-type MeetingData = {
-  schedule: Date | null;
-  team: Team | null;
-  members: Array<User>;
-  newAgendas: { agenda: string }[];
-  deletedAgendasId: number[];
 };
 
 export default function MeetingFormDialog(props: Props) {
