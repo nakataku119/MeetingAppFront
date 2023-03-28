@@ -1,6 +1,5 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
-import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
@@ -34,7 +33,7 @@ const MyPage: NextPage = () => {
   if (currentUser) {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
-        <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
+        {/* <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
           <Typography variant="h5" component="h1" color="text.secondary">
             今後のミーティング
           </Typography>
@@ -67,7 +66,7 @@ const MyPage: NextPage = () => {
             onSelectTeam={handleSelectTeam}
           />
         </Box>
-        <MemberCardContainer members={teamMembers} />
+        <MemberCardContainer members={teamMembers} /> */}
       </Box>
     );
   } else {

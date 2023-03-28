@@ -4,13 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
-import { Agenda, Mtg, User } from "@/utils/types";
+import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
 import { dateFormatter } from "@/utils/functions";
 import MeetingFormDialog from "./MeetingFormDialog";
 import { useState } from "react";
 
 type Props = {
   meeting: Mtg;
+  onClickDialogSubmit: (meetingDate: MeetingData) => void;
 };
 
 export default function MeetingCard(props: Props) {
@@ -62,6 +63,7 @@ export default function MeetingCard(props: Props) {
         onClickCancel={() => {
           setIsOpen(false);
         }}
+        onClickSubmit={props.onClickDialogSubmit}
       />
     </Paper>
   );

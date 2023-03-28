@@ -24,3 +24,12 @@ export type Agenda = {
   agenda: string;
   mtgId: number;
 };
+
+export type MeetingData = {
+  id: number | null;
+  schedule: Date | null;
+  team: Team | null;
+  members: Array<User>;
+  newAgendas: { agenda: string }[];
+  deletedAgendasId: number[];
+};

@@ -1,12 +1,11 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCard from "@/components/organisms/MeetingCard";
-import MeetingCardContainer from "@/components/organisms/MeetingCardContainer";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
-import { Mtg, Team, User } from "@/utils/types";
+import { MeetingData, Mtg, Team, User } from "@/utils/types";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
@@ -17,6 +16,46 @@ const GuestPage: NextPage = () => {
   const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false);
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
+  };
+  const handleCreateMeeting = async (meetingData: MeetingData) => {
+    const reqData = {
+      schedule: new Date(meetingData.schedule!),
+      teamId: meetingData.team?.id,
+      users: meetingData.members.map((member) => ({ id: member.id })),
+      agendas: meetingData.newAgendas,
+    };
+    await axiosClient.post("/mtgs", {
+      data: reqData,
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {});
+  };
+  const handleUpdateMeeting = async (meetingData: MeetingData) => {
+    const reqData = {
+      schedule: new Date(meetingData.schedule!),
+      teamId: meetingData.team?.id,
+      users: meetingData.members.map((member) => ({ id: member.id })),
+      agendas: meetingData.newAgendas,
+    };
+    await axiosClient.put(`/mtgs/${meetingData.id}`, {
+      data: reqData,
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {
+    //   setDialogOpen(false);
+    // });
+    await axiosClient.delete("/agendas", {
+      data: {
+        agendas: meetingData.deletedAgendasId,
+      },
+    });
+    // .then((res) => router.push("/mypage"))
+    // .catch((error) => setError("登録できません。"))
+    // .then(() => {
+    //   setDialogOpen(false);
+    // });
   };
 
   useEffect(() => {
@@ -32,7 +71,13 @@ const GuestPage: NextPage = () => {
     return (
       <Box sx={{ height: "40%", display: "flex" }}>
         {planedMeetings.map((item: Mtg, index: number) => {
-          return <MeetingCard meeting={item} key={index} />;
+          return (
+            <MeetingCard
+              meeting={item}
+              key={index}
+              onClickDialogSubmit={handleUpdateMeeting}
+            />
+          );
         })}
       </Box>
     );
@@ -55,6 +100,7 @@ const GuestPage: NextPage = () => {
           <MeetingFormDialog
             open={isNewDialogOpen}
             onClickCancel={() => setIsNewDialogOpen(false)}
+            onClickSubmit={handleCreateMeeting}
           />
         </Box>
         <MeetingCardList />
