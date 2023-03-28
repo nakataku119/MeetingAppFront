@@ -93,49 +93,6 @@ export default function MeetingFormDialog(props: Props) {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
   };
-  // const handleDialogConfirm = async () => {
-  //   await axiosClient
-  //     .post("/#", {
-  //       data: meetingData,
-  //     })
-  //     .then((res) => router.push("/mypage"))
-  //     .catch((error) => setError("登録できません。"))
-  //     .then(() => {});
-  // };
-  // const handleEditConfirm = async () => {
-  // const meetingAgendaTitles = props.meeting!.agendas.map(
-  //   (item) => item.agenda
-  // );
-  // const newAgendaTitle = checkedAgenda.filter(
-  //   (agenda) => !meetingAgendaTitles.includes(agenda)
-  // );
-  // const deletedAgendas = props.meeting?.agendas.filter(
-  //   (agenda) => !checkedAgenda.includes(agenda.agenda)
-  // );
-  // // await axiosClient
-  //   .put(`/mtgs/${props.meeting?.id}`, {
-  //     users: invitedMembers.map((member) => ({ id: member.id })),
-  //     schedule: new Date(schedule),
-  //     agendas: newAgendaTitle.map((agenda) => ({ agenda: agenda })),
-  //     team: selectedTeam!.id,
-  //   })
-  //   .then((res) => router.push("/mypage"))
-  //   .catch((error) => setError("登録できません。"))
-  //   .then(() => {
-  //     setDialogOpen(false);
-  //   });
-  // await axiosClient
-  //   .delete("/agendas", {
-  //     data: {
-  //       agendas: deletedAgendas?.map((agenda) => agenda.id),
-  //     },
-  //   })
-  //   .then((res) => router.push("/mypage"))
-  //   .catch((error) => setError("登録できません。"))
-  //   .then(() => {
-  //     setDialogOpen(false);
-  //   });
-  // };
   return (
     <Dialog open={props.open}>
       <Paper
@@ -172,6 +129,7 @@ export default function MeetingFormDialog(props: Props) {
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
+          initialValue={props.meeting?.team}
         />
         {!meetingData.team && (
           <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
