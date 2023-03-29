@@ -21,7 +21,7 @@ export default function UsersList() {
       setUsers(res.data);
     };
     getAllUsers();
-  });
+  }, []);
 
   return (
     <TableContainer component={Paper}>
