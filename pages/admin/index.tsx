@@ -1,4 +1,6 @@
 import SideMenuList from "@/components/organisms/SideMenuList";
+import UsersList from "@/components/organisms/UsersList";
+import { Box } from "@mui/material";
 
 export default function AdminHone() {
   const menus = ["ユーザー", "チーム", "ミーティング"];
@@ -6,5 +8,10 @@ export default function AdminHone() {
     console.log(menu);
   };
 
-  return <SideMenuList menus={menus} onClick={handleClickMenu} />;
+  return (
+    <Box zIndex={1}>
+      <SideMenuList menus={menus} onClick={handleClickMenu} />
+      <UsersList />
+    </Box>
+  );
 }
