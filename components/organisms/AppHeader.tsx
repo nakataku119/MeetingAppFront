@@ -13,7 +13,7 @@ export default function AppHeader() {
   const { currentUser } = React.useContext(CurrentUserContext);
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ color: "#cff09e", backgroundColor: "#3b8686" }}>
+      <AppBar sx={{ color: "#cff09e", backgroundColor: "#3b8686", zIndex: 2 }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link href="/">LOGO LOGO</Link>
