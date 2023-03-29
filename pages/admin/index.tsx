@@ -23,7 +23,7 @@ const SwitchMenu = (props: { menu: string }) => {
     case "チーム":
       return <TeamsList allUsers={users} />;
     case "ミーティング":
-      return <></>;
+      return <>必要か検討</>;
     default:
       return <></>;
   }
