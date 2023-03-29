@@ -19,7 +19,11 @@ type Props = {
   open: boolean;
   buttonTitle: string;
   onClickCancel: () => void;
-  onClickSubmit: (joinedMembers: Array<User>, teamId: number) => void;
+  onClickSubmit: (
+    joinedMembers: Array<User>,
+    teamName: string,
+    teamId: number
+  ) => void;
 };
 
 export default function TeamFormDialog(props: Props) {
@@ -27,8 +31,9 @@ export default function TeamFormDialog(props: Props) {
     props.team?.users || []
   );
   const [candidateUsers, setCandidateUsers] = useState<Array<User>>([]);
+  const [teamName, setTeamName] = useState<string>(props.team?.name || "");
 
-  const handleChangeText = (text: string) => {
+  const handleChangeMemberText = (text: string) => {
     setCandidateUsers(
       props.allUsers
         .filter(
@@ -36,6 +41,9 @@ export default function TeamFormDialog(props: Props) {
         )
         .filter((user) => user.name.includes(text))
     );
+  };
+  const handleChangeTeamText = (text: string) => {
+    setTeamName(text);
   };
   const handleSelectUser = (member: User) => {
     setCandidateUsers([]);
@@ -53,13 +61,14 @@ export default function TeamFormDialog(props: Props) {
         sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
         onSubmit={handleSubmit}
       >
-        <Typography
-          variant="h6"
-          component="h1"
-          sx={{ width: "100%", pb: 3, textAlign: "center" }}
-        >
-          {`チーム名：${props.team?.name}`}
-        </Typography>
+        <TextField
+          id="team-name"
+          label="チーム名"
+          value={teamName}
+          variant="filled"
+          sx={{ width: "100%", pb: 1 }}
+          onChange={(event) => handleChangeTeamText(event.target.value)}
+        />
         <Box
           sx={{ border: 1, borderRadius: 2, height: 100, padding: 0.5, mb: 1 }}
         >
@@ -86,7 +95,7 @@ export default function TeamFormDialog(props: Props) {
           label="追加メンバー"
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
-          onChange={(event) => handleChangeText(event.target.value)}
+          onChange={(event) => handleChangeMemberText(event.target.value)}
         />
         {candidateUsers.map((user: User, index: number) => (
           <MenuItem
@@ -101,7 +110,9 @@ export default function TeamFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() => props.onClickSubmit(joinedMembers, props.team!.id)}
+          onClick={() =>
+            props.onClickSubmit(joinedMembers, teamName, props.team!.id)
+          }
         >
           {props.buttonTitle}
         </Button>

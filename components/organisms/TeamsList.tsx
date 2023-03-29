@@ -29,9 +29,11 @@ export default function TeamsList(props: Props) {
   const handleCreateMeeting = () => {};
   const handleUpdateTeam = async (
     joinedMembers: Array<User>,
+    name: string,
     teamId: number
   ) => {
     const reqData = {
+      name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
     await axiosClient.put(`/teams/${teamId}`, {
