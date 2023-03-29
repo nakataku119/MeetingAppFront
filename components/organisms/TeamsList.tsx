@@ -11,7 +11,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import TeamMembersDialog from "./TeamMembersDialog";
+import TeamFormDialog from "./TeamFormDialog";
 
 type Props = {
   allUsers: Array<User>;
@@ -20,11 +20,14 @@ type Props = {
 export default function TeamsList(props: Props) {
   const [teams, setTeams] = useState<Array<Team>>([]);
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
+  const [openNewDialog, setOpenNewDialog] = useState<boolean>(false);
 
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
+    setOpenNewDialog(false);
   };
-  const handleDialogSubmit = async (
+  const handleCreateMeeting = () => {};
+  const handleUpdateTeam = async (
     joinedMembers: Array<User>,
     teamId: number
   ) => {
@@ -51,6 +54,23 @@ export default function TeamsList(props: Props) {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>チーム名</TableCell>
+            <TableCell>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => setOpenNewDialog(true)}
+              >
+                新規作成
+              </Button>
+              <TeamFormDialog
+                team={null}
+                allUsers={props.allUsers}
+                open={openNewDialog}
+                onClickCancel={handleDialogCancel}
+                onClickSubmit={handleCreateMeeting}
+                buttonTitle={"登録"}
+              />
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -73,12 +93,13 @@ export default function TeamsList(props: Props) {
                 >
                   メンバー
                 </Button>
-                <TeamMembersDialog
+                <TeamFormDialog
                   team={team}
                   allUsers={props.allUsers}
                   open={team.id === dialogOpenTeam?.id}
                   onClickCancel={handleDialogCancel}
-                  onClickSubmit={handleDialogSubmit}
+                  onClickSubmit={handleUpdateTeam}
+                  buttonTitle={"更新"}
                 />
               </TableCell>
             </TableRow>

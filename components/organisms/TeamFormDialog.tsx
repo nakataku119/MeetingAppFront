@@ -14,16 +14,17 @@ import {
 import { FormEvent, useState } from "react";
 
 type Props = {
-  team: Team;
+  team?: Team | null;
   allUsers: Array<User>;
   open: boolean;
+  buttonTitle: string;
   onClickCancel: () => void;
   onClickSubmit: (joinedMembers: Array<User>, teamId: number) => void;
 };
 
-export default function TeamMembersDialog(props: Props) {
+export default function TeamFormDialog(props: Props) {
   const [joinedMembers, setJoinedMembers] = useState<Array<User>>(
-    props.team.users
+    props.team?.users || []
   );
   const [candidateUsers, setCandidateUsers] = useState<Array<User>>([]);
 
@@ -57,7 +58,7 @@ export default function TeamMembersDialog(props: Props) {
           component="h1"
           sx={{ width: "100%", pb: 3, textAlign: "center" }}
         >
-          {`チーム名：${props.team.name}`}
+          {`チーム名：${props.team?.name}`}
         </Typography>
         <Box
           sx={{ border: 1, borderRadius: 2, height: 100, padding: 0.5, mb: 1 }}
@@ -100,9 +101,9 @@ export default function TeamMembersDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() => props.onClickSubmit(joinedMembers, props.team.id)}
+          onClick={() => props.onClickSubmit(joinedMembers, props.team!.id)}
         >
-          登録
+          {props.buttonTitle}
         </Button>
         <Button
           onClick={() => props.onClickCancel()}
