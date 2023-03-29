@@ -21,7 +21,6 @@ type Prop = {
 
 export default function MemberCard(props: Prop) {
   const { member } = props;
-  // myPageでcurrentUserのnullをガード
   const { currentUser } = useContext(CurrentUserContext);
   return (
     <Paper

@@ -28,7 +28,8 @@ type Props = {
 
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
-  const router = useRouter();
+  const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
+  const [error, setError] = useState<string | null>(null);
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
@@ -42,6 +43,7 @@ export default function MeetingFormDialog(props: Props) {
   );
   const initialAgendaTitles =
     props.meeting?.agendas.map((agenda) => agenda.agenda) || [];
+
   const filterNewAgendas = (agendas: Array<string>) => {
     return agendas
       .filter((agenda) => !initialAgendaTitles.includes(agenda))
@@ -52,9 +54,6 @@ export default function MeetingFormDialog(props: Props) {
       .filter((agenda) => !agendas.includes(agenda.agenda))
       .map((agenda) => agenda.id);
   };
-  // ユーザーの入力に対する予測変換
-  const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
-  const [error, setError] = useState<string | null>(null);
   const handleSelectTeam = (team: Team) => {
     setMeetingData(Object.assign({}, meetingData, { team: team }));
   };

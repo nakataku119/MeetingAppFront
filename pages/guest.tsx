@@ -12,8 +12,9 @@ import React, { useContext, useEffect, useState } from "react";
 
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-  const [isNewDialogOpen, setIsNewDialogOpen] = useState<boolean>(false);
+
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
   };
@@ -70,10 +71,10 @@ const GuestPage: NextPage = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     return (
       <Box sx={{ height: "40%", display: "flex" }}>
-        {planedMeetings.map((item: Mtg, index: number) => {
+        {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
             <MeetingCard
-              meeting={item}
+              meeting={meeting}
               key={index}
               onClickDialogSubmit={handleUpdateMeeting}
             />
@@ -93,13 +94,13 @@ const GuestPage: NextPage = () => {
           <Button
             size="small"
             variant="outlined"
-            onClick={() => setIsNewDialogOpen(true)}
+            onClick={() => setIsDialogOpen(true)}
           >
             新規ミーティングを設定
           </Button>
           <MeetingFormDialog
-            open={isNewDialogOpen}
-            onClickCancel={() => setIsNewDialogOpen(false)}
+            open={isDialogOpen}
+            onClickCancel={() => setIsDialogOpen(false)}
             onClickSubmit={handleCreateMeeting}
           />
         </Box>
