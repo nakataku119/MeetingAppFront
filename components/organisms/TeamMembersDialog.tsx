@@ -18,7 +18,7 @@ type Props = {
   allUsers: Array<User>;
   open: boolean;
   onClickCancel: () => void;
-  onClickSubmit: (joinedMembers: Array<User>) => void;
+  onClickSubmit: (joinedMembers: Array<User>, teamId: number) => void;
 };
 
 export default function TeamMembersDialog(props: Props) {
@@ -100,7 +100,7 @@ export default function TeamMembersDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() => props.onClickSubmit(joinedMembers)}
+          onClick={() => props.onClickSubmit(joinedMembers, props.team.id)}
         >
           登録
         </Button>

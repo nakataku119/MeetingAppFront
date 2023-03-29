@@ -24,6 +24,17 @@ export default function TeamsList(props: Props) {
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
   };
+  const handleDialogSubmit = async (
+    joinedMembers: Array<User>,
+    teamId: number
+  ) => {
+    const reqData = {
+      members: joinedMembers.map((member) => ({ id: member.id })),
+    };
+    await axiosClient.put(`/teams/${teamId}`, {
+      data: reqData,
+    });
+  };
 
   useEffect(() => {
     const getAllTeams = async () => {
@@ -67,6 +78,7 @@ export default function TeamsList(props: Props) {
                   allUsers={props.allUsers}
                   open={team.id === dialogOpenTeam?.id}
                   onClickCancel={handleDialogCancel}
+                  onClickSubmit={handleDialogSubmit}
                 />
               </TableCell>
             </TableRow>
