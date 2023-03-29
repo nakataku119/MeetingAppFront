@@ -11,14 +11,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 type Props = {
   team: Team;
   allUsers: Array<User>;
   open: boolean;
   onClickCancel: () => void;
-  //   onClickSubmit: (meetingData: MeetingData) => void;
+  onClickSubmit: (joinedMembers: Array<User>) => void;
 };
 
 export default function TeamMembersDialog(props: Props) {
@@ -40,6 +40,9 @@ export default function TeamMembersDialog(props: Props) {
     setCandidateUsers([]);
     setJoinedMembers([...joinedMembers, member]);
   };
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+  };
 
   return (
     <Dialog open={props.open}>
@@ -47,7 +50,7 @@ export default function TeamMembersDialog(props: Props) {
         elevation={3}
         component="form"
         sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <Typography
           variant="h6"
@@ -97,7 +100,7 @@ export default function TeamMembersDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          //   onClick={() => props.onClickSubmit(meetingData)}
+          onClick={() => props.onClickSubmit(joinedMembers)}
         >
           登録
         </Button>
