@@ -30,9 +30,15 @@ export default function TeamMembersDialog(props: Props) {
   const handleChangeText = (text: string) => {
     setCandidateUsers(
       props.allUsers
-        .filter((user) => !joinedMembers.includes(user))
+        .filter(
+          (user) => !joinedMembers.map((member) => member.id).includes(user.id)
+        )
         .filter((user) => user.name.includes(text))
     );
+  };
+  const handleSelectUser = (member: User) => {
+    setCandidateUsers([]);
+    setJoinedMembers([...joinedMembers, member]);
   };
 
   return (
@@ -82,7 +88,7 @@ export default function TeamMembersDialog(props: Props) {
           <MenuItem
             key={index}
             value={user.name}
-            // onClick={() => handleSelectUser(user)}
+            onClick={() => handleSelectUser(user)}
           >
             {user.name}
           </MenuItem>
