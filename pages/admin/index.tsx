@@ -35,31 +35,10 @@ export default function AdminHone() {
   const handleClickMenu = (menu: string) => {
     setDisplayedMenu(menu);
   };
-  //   const handleClickButton = () => {
-  //     switch (displayedMenu) {
-  //       case "ユーザー":
-  //         loginWithRedirect({ authorizationParams: { screen_hint: "signup" } });
-  //         break;
-  //       case "チーム":
-  //         return <></>;
-  //       case "ミーティング":
-  //         return <></>;
-  //       default:
-  //         return <></>;
-  //     }
-  //   };
 
   return (
     <Box zIndex={1}>
       <SideMenuList menus={menus} onClick={handleClickMenu} />
-      {/* <Button
-        size="small"
-        variant="outlined"
-        onClick={handleClickButton}
-        sx={{ mb: 2 }}
-      >
-        {`${displayedMenu}作成`}
-      </Button> */}
       <SwitchMenu menu={displayedMenu} />
     </Box>
   );
