@@ -1,4 +1,3 @@
-import Head from "next/head";
 import LoginOrSingupButton from "@/components/organisms/LoginOrSignupButton";
 import { Link } from "@mui/material";
 
