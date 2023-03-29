@@ -21,7 +21,7 @@ const SwitchMenu = (props: { menu: string }) => {
     case "ユーザー":
       return <UsersList users={users} />;
     case "チーム":
-      return <TeamsList />;
+      return <TeamsList allUsers={users} />;
     case "ミーティング":
       return <></>;
     default:

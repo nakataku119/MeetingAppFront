@@ -1,5 +1,5 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
-import { Team } from "@/utils/types";
+import { Team, User } from "@/utils/types";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -13,7 +13,11 @@ import {
 } from "@mui/material";
 import TeamMembersDialog from "./TeamMembersDialog";
 
-export default function TeamsList() {
+type Props = {
+  allUsers: Array<User>;
+};
+
+export default function TeamsList(props: Props) {
   const [teams, setTeams] = useState<Array<Team>>([]);
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
 
@@ -60,6 +64,7 @@ export default function TeamsList() {
                 </Button>
                 <TeamMembersDialog
                   team={team}
+                  allUsers={props.allUsers}
                   open={team.id === dialogOpenTeam?.id}
                   onClickCancel={handleDialogCancel}
                 />
