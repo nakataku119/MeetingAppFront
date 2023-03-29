@@ -11,9 +11,15 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import TeamMembersDialog from "./TeamMembersDialog";
 
 export default function TeamsList() {
   const [teams, setTeams] = useState<Array<Team>>([]);
+  const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
+
+  const handleDialogCancel = () => {
+    setDialogOpenTeam(null);
+  };
 
   useEffect(() => {
     const getAllTeams = async () => {
@@ -48,10 +54,15 @@ export default function TeamsList() {
                 <Button
                   size="small"
                   variant="outlined"
-                  //   onClick={handleClickButton}
+                  onClick={() => setDialogOpenTeam(team)}
                 >
                   メンバー
                 </Button>
+                <TeamMembersDialog
+                  team={team}
+                  open={team.id === dialogOpenTeam?.id}
+                  onClickCancel={handleDialogCancel}
+                />
               </TableCell>
             </TableRow>
           ))}
