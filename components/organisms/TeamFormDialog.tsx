@@ -22,7 +22,7 @@ type Props = {
   onClickSubmit: (
     joinedMembers: Array<User>,
     teamName: string,
-    teamId: number
+    teamId?: number
   ) => void;
 };
 
@@ -111,7 +111,7 @@ export default function TeamFormDialog(props: Props) {
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
           onClick={() =>
-            props.onClickSubmit(joinedMembers, teamName, props.team!.id)
+            props.onClickSubmit(joinedMembers, teamName, props.team?.id)
           }
         >
           {props.buttonTitle}

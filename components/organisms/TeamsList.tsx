@@ -26,17 +26,28 @@ export default function TeamsList(props: Props) {
     setDialogOpenTeam(null);
     setOpenNewDialog(false);
   };
-  const handleCreateMeeting = () => {};
-  const handleUpdateTeam = async (
+  const handleCreateMeeting = async (
     joinedMembers: Array<User>,
-    name: string,
-    teamId: number
+    name: string
   ) => {
     const reqData = {
       name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
-    await axiosClient.put(`/teams/${teamId}`, {
+    await axiosClient.post("/teams", {
+      data: reqData,
+    });
+  };
+  const handleUpdateTeam = async (
+    joinedMembers: Array<User>,
+    name: string,
+    teamId?: number
+  ) => {
+    const reqData = {
+      name: name,
+      members: joinedMembers.map((member) => ({ id: member.id })),
+    };
+    await axiosClient.put(`/teams/${teamId!}`, {
       data: reqData,
     });
   };
