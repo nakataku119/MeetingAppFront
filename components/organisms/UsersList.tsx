@@ -1,4 +1,3 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
 import { User } from "@/utils/types";
 import {
   Button,
@@ -10,7 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 
 type Props = {
   users: Array<User>;
@@ -24,6 +22,18 @@ export default function UsersList(props: Props) {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>名前</TableCell>
+            <TableCell>
+              {/* Auth0の管理画面へのリンク */}
+              <Button
+                size="small"
+                variant="outlined"
+                component="a"
+                href="https://google.com"
+                target="_blank"
+              >
+                新規作成
+              </Button>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
