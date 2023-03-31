@@ -3,18 +3,18 @@ import SideMenuList from "@/components/organisms/SideMenuList";
 import TeamsList from "@/components/organisms/TeamsList";
 import UsersList from "@/components/organisms/UsersList";
 import { User } from "@/utils/types";
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const SwitchMenu = (props: { menu: string }) => {
   const [users, setUsers] = useState<Array<User>>([]);
 
   useEffect(() => {
-    const getAllUsers = async () => {
+    const fetchAllUsers = async () => {
       const res = await axiosClient.get("/users");
       setUsers(res.data);
     };
-    getAllUsers();
+    fetchAllUsers();
   }, []);
 
   switch (props.menu) {
@@ -31,7 +31,7 @@ const SwitchMenu = (props: { menu: string }) => {
 
 export default function AdminHone() {
   const menus = ["ユーザー", "チーム", "ミーティング"];
-  const [displayedMenu, setDisplayedMenu] = useState<string>("チーム");
+  const [displayedMenu, setDisplayedMenu] = useState<string>("ユーザー");
   const handleClickMenu = (menu: string) => {
     setDisplayedMenu(menu);
   };
