@@ -1,6 +1,5 @@
-import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
+import { Team, User } from "@/utils/types";
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -51,6 +50,11 @@ export default function TeamFormDialog(props: Props) {
   };
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+  };
+  const resetState = () => {
+    setJoinedMembers(props.team?.users || []);
+    setCandidateUsers([]);
+    setTeamName(props.team?.name || "");
   };
 
   return (
@@ -110,14 +114,18 @@ export default function TeamFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() =>
-            props.onClickSubmit(joinedMembers, teamName, props.team?.id)
-          }
+          onClick={() => {
+            resetState();
+            props.onClickSubmit(joinedMembers, teamName, props.team?.id);
+          }}
         >
           {props.buttonTitle}
         </Button>
         <Button
-          onClick={() => props.onClickCancel()}
+          onClick={() => {
+            resetState();
+            props.onClickCancel();
+          }}
           variant="outlined"
           color="error"
           sx={{ width: "100%", padding: "10px", mt: 1 }}
