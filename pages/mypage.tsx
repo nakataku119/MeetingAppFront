@@ -1,5 +1,6 @@
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
+import LoginButtonDialog from "@/components/organisms/LoginButtonDialog";
 import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
@@ -7,7 +8,7 @@ import SignupFormDialog from "@/components/organisms/SignupFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Dialog, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -15,6 +16,7 @@ const MyPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { hasToken } = useContext(AxiosClientContext);
 
   const handleSelectTeam = (team: Team) => {
     setTeamMembers(team.users);
@@ -137,7 +139,7 @@ const MyPage: NextPage = () => {
   } else {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
-        <p>waiting...</p>
+        {!hasToken ? <LoginButtonDialog /> : <p>waiting...</p>}
       </Box>
     );
   }
