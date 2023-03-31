@@ -1,7 +1,6 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { Team, User } from "@/utils/types";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import {
   Button,
   Paper,
@@ -22,7 +21,6 @@ export default function TeamsList(props: Props) {
   const [teams, setTeams] = useState<Array<Team>>([]);
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
   const [openNewDialog, setOpenNewDialog] = useState<boolean>(false);
-  const router = useRouter();
 
   useEffect(() => {
     fetchAllTeams();
