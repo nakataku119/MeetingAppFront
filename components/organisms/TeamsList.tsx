@@ -1,6 +1,7 @@
 import { axiosClient } from "@/axios/AxiosClientProvider";
 import { Team, User } from "@/utils/types";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import {
   Button,
   Paper,
@@ -21,22 +22,34 @@ export default function TeamsList(props: Props) {
   const [teams, setTeams] = useState<Array<Team>>([]);
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
   const [openNewDialog, setOpenNewDialog] = useState<boolean>(false);
+  const router = useRouter();
 
+  useEffect(() => {
+    fetchAllTeams();
+  }, []);
+
+  const fetchAllTeams = async () => {
+    const res = await axiosClient.get("/teams");
+    setTeams(res.data);
+  };
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
     setOpenNewDialog(false);
   };
-  const handleCreateMeeting = async (
-    joinedMembers: Array<User>,
-    name: string
-  ) => {
+  const handleCreateTeam = async (joinedMembers: Array<User>, name: string) => {
     const reqData = {
       name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
-    await axiosClient.post("/teams", {
-      data: reqData,
-    });
+    await axiosClient
+      .post("/teams", {
+        data: reqData,
+      })
+      .catch((error) => {})
+      .then(() => {
+        setOpenNewDialog(false);
+        fetchAllTeams();
+      });
   };
   const handleUpdateTeam = async (
     joinedMembers: Array<User>,
@@ -51,14 +64,6 @@ export default function TeamsList(props: Props) {
       data: reqData,
     });
   };
-
-  useEffect(() => {
-    const getAllTeams = async () => {
-      const res = await axiosClient.get("/teams");
-      setTeams(res.data);
-    };
-    getAllTeams();
-  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -80,7 +85,7 @@ export default function TeamsList(props: Props) {
                 allUsers={props.allUsers}
                 open={openNewDialog}
                 onClickCancel={handleDialogCancel}
-                onClickSubmit={handleCreateMeeting}
+                onClickSubmit={handleCreateTeam}
                 buttonTitle={"登録"}
               />
             </TableCell>
