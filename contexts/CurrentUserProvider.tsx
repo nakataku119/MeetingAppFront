@@ -25,27 +25,26 @@ const CurrentUserProvider = ({
   const router = useRouter();
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      await axiosClient
-        .get("/users/me")
-        .then((res) => {
-          if (!res.data) {
-            createUser();
-          } else {
-            setCurrentUser(res.data);
-          }
-        })
-        .catch((error) => console.log(error));
-    };
     if (hasToken) {
       fetchCurrentUser();
     }
   }, [hasToken]);
-
+  const fetchCurrentUser = async () => {
+    await axiosClient
+      .get("/users/me")
+      .then((res) => {
+        if (!res.data) {
+          createUser();
+        } else {
+          setCurrentUser(res.data);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
   const createUser = async () => {
     await axiosClient
       .post("/users", { name: "" })
-      .then((res) => setCurrentUser(res.data));
+      .then(() => fetchCurrentUser());
   };
 
   return (
