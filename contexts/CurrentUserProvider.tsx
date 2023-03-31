@@ -26,13 +26,27 @@ const CurrentUserProvider = ({
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("/users/me");
-      setCurrentUser(res.data);
+      await axiosClient
+        .get("/users/me")
+        .then((res) => {
+          if (!res.data) {
+            createUser();
+          } else {
+            setCurrentUser(res.data);
+          }
+        })
+        .catch((error) => console.log(error));
     };
     if (hasToken) {
       fetchCurrentUser();
     }
   }, [hasToken]);
+
+  const createUser = async () => {
+    await axiosClient
+      .post("/users", { name: "" })
+      .then((res) => setCurrentUser(res.data));
+  };
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
