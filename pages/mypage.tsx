@@ -59,6 +59,21 @@ const MyPage: NextPage = () => {
     //   setDialogOpen(false);
     // });
   };
+  const handleUpdateUser = async (name: string) => {
+    console.log(name);
+    await axiosClient
+      .put("/users", { name: name })
+      .then((res) => fetchCurrentUser())
+      .catch((error) => console.log(error));
+  };
+  const fetchCurrentUser = async () => {
+    await axiosClient
+      .get("/users/me")
+      .then((res) => {
+        setCurrentUser(res.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
@@ -113,7 +128,10 @@ const MyPage: NextPage = () => {
           />
         </Box>
         <MemberCardContainer members={teamMembers} />
-        <SignupFormDialog open={true} />
+        <SignupFormDialog
+          open={!currentUser.name}
+          onClickConfirm={handleUpdateUser}
+        />
       </Box>
     );
   } else {
