@@ -11,7 +11,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/signup`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/mypage`;
   return (
     <>
       <Head>
