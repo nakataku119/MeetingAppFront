@@ -60,9 +60,15 @@ export default function TeamsList(props: Props) {
       name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
-    await axiosClient.put(`/teams/${teamId!}`, {
-      data: reqData,
-    });
+    await axiosClient
+      .put(`/teams/${teamId!}`, {
+        data: reqData,
+      })
+      .catch((error) => {})
+      .then(() => {
+        setDialogOpenTeam(null);
+        fetchAllTeams();
+      });
   };
 
   return (
