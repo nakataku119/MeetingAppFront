@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
-export default function SignupForm() {
+export default function SignupFormDialog(props: { open: boolean }) {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function SignupForm() {
       });
   };
   return (
-    <>
+    <Dialog open={props.open}>
       <Paper
         elevation={3}
         component="form"
@@ -86,6 +86,6 @@ export default function SignupForm() {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Dialog>
   );
 }

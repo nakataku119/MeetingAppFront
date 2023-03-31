@@ -3,6 +3,7 @@ import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
+import SignupFormDialog from "@/components/organisms/SignupForm";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
@@ -112,6 +113,7 @@ const MyPage: NextPage = () => {
           />
         </Box>
         <MemberCardContainer members={teamMembers} />
+        <SignupFormDialog open={true} />
       </Box>
     );
   } else {
