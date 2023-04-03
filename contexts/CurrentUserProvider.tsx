@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/utils/types";
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
+import { useRouter } from "next/router";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface UserContextProps {
   currentUser: User | null;
@@ -19,16 +21,32 @@ const CurrentUserProvider = ({
 }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { hasToken } = useContext(AxiosClientContext);
+  const { isAuthenticated } = useAuth0();
+  const router = useRouter();
+
   useEffect(() => {
-    console.log(hasToken);
-    const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("/users/me");
-      setCurrentUser(res.data);
-    };
     if (hasToken) {
       fetchCurrentUser();
     }
   }, [hasToken]);
+  const fetchCurrentUser = async () => {
+    await axiosClient
+      .get("/users/me")
+      .then((res) => {
+        if (!res.data) {
+          createUser();
+        } else {
+          setCurrentUser(res.data);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+  const createUser = async () => {
+    await axiosClient
+      .post("/users", { name: "" })
+      .then(() => fetchCurrentUser());
+  };
+
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
       {children}

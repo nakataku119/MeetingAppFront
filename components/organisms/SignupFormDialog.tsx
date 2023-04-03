@@ -1,4 +1,3 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
 import {
   Button,
   Dialog,
@@ -12,7 +11,12 @@ import {
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
-export default function SignupForm() {
+type Props = {
+  open: boolean;
+  onClickConfirm: (name: string) => void;
+};
+
+export default function SignupFormDialog(props: Props) {
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -28,17 +32,9 @@ export default function SignupForm() {
   const handleDialogCancel = async () => {
     setDialogOpen(false);
   };
-  const handleDialogConfirm = async () => {
-    await axiosClient
-      .post("/users", { name: name })
-      .then((res) => router.push("/mypage"))
-      .catch((error) => setError("登録できません。"))
-      .then(() => {
-        setDialogOpen(false);
-      });
-  };
+
   return (
-    <>
+    <Dialog open={props.open}>
       <Paper
         elevation={3}
         component="form"
@@ -50,7 +46,7 @@ export default function SignupForm() {
           component="h1"
           sx={{ width: "100%", pb: 3, textAlign: "center" }}
         >
-          ユーザー登録
+          ユーザー名を登録
         </Typography>
         <TextField
           required
@@ -81,11 +77,11 @@ export default function SignupForm() {
           <Button onClick={handleDialogCancel} color="secondary">
             キャンセル
           </Button>
-          <Button onClick={handleDialogConfirm} color="primary">
+          <Button onClick={() => props.onClickConfirm(name)} color="primary">
             登録
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Dialog>
   );
 }

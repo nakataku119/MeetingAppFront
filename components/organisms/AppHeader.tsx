@@ -24,6 +24,11 @@ export default function AppHeader() {
               <Button color="inherit" onClick={() => logout()} sx={{ pl: 5 }}>
                 ログアウト
               </Button>
+              {currentUser.admin && (
+                <Button color="inherit">
+                  <Link href={"/admin"}>管理者画面へ</Link>
+                </Button>
+              )}
             </>
           ) : (
             <Button color="inherit" onClick={() => loginWithRedirect()}>
