@@ -1,12 +1,17 @@
 import { Mtg, User } from "@/utils/types";
-import { Place } from "@mui/icons-material";
 
+// 日時を2桁にする
+function twoDigitFormatter(datetime: number): string {
+  return ("0" + String(datetime)).slice(-2);
+}
 // YYYY/MM/DD hh:mmでフォーマット
 export function dateFormatter(date: Date): string {
   const initDate = new Date(date);
-  return `${initDate.getFullYear()}/${
+  return `${initDate.getFullYear()}/${twoDigitFormatter(
     initDate.getMonth() + 1
-  }/${initDate.getDate()} ${initDate.getHours()}:${initDate.getMinutes()}`;
+  )}/${twoDigitFormatter(initDate.getDate())} ${twoDigitFormatter(
+    initDate.getHours()
+  )}:${twoDigitFormatter(initDate.getMinutes())}`;
 }
 // 未来時間のミーティングを取得
 export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {
