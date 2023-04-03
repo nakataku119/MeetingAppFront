@@ -18,6 +18,8 @@ import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
+import moment from "moment";
+import "moment-timezone";
 
 type Props = {
   meeting?: Mtg;
@@ -112,15 +114,17 @@ export default function MeetingFormDialog(props: Props) {
           sx={{ width: "100%" }}
           value={
             meetingData.schedule
-              ? new Date(meetingData.schedule).toISOString().slice(0, 16)
+              ? moment
+                  .tz(new Date(meetingData.schedule), "Asia/Tokyo")
+                  .format("YYYY-MM-DDTHH:mm")
               : ""
           }
           onChange={(event) => {
             setMeetingData(
               Object.assign({}, meetingData, {
-                schedule: new Date(event.target.value)
-                  .toISOString()
-                  .slice(0, 16),
+                schedule: moment
+                  .tz(new Date(event.target.value), "Asia/Tokyo")
+                  .format("YYYY-MM-DDTHH:mm"),
               })
             );
           }}
