@@ -35,7 +35,6 @@ type Props = {
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
-  // const [error, setError] = useState<string | null>(null);
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
@@ -214,6 +213,7 @@ export default function MeetingFormDialog(props: Props) {
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
           onClick={() => props.onClickSubmit(meetingData)}
+          disabled={!meetingData.schedule || !meetingData.team}
         >
           登録
         </Button>
