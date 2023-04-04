@@ -3,7 +3,7 @@ import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import LoginButtonDialog from "@/components/organisms/LoginButtonDialog";
 import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
-import MemberCardContainer from "@/components/organisms/MemberCardContainer";
+import MemberCard from "@/components/organisms/MemberCard";
 import SignupFormDialog from "@/components/organisms/SignupFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
@@ -94,6 +94,16 @@ const MyPage: NextPage = () => {
     );
   };
 
+  const MemberCardList = () => {
+    return (
+      <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
+        {teamMembers.map((item: User, index: number) => (
+          <MemberCard key={index} member={item} />
+        ))}
+      </Box>
+    );
+  };
+
   if (currentUser) {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
@@ -129,7 +139,7 @@ const MyPage: NextPage = () => {
             onSelectTeam={handleSelectTeam}
           />
         </Box>
-        <MemberCardContainer members={teamMembers} />
+        <MemberCardList />
         <SignupFormDialog
           open={!currentUser.name}
           onClickConfirm={handleUpdateUser}
