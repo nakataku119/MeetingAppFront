@@ -23,6 +23,8 @@ import "moment-timezone";
 
 type Props = {
   meeting?: Mtg;
+  member?: User;
+  team?: Team;
   open: boolean;
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
@@ -35,8 +37,10 @@ export default function MeetingFormDialog(props: Props) {
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
-    team: props.meeting?.team || null,
-    members: props.meeting?.users || [currentUser],
+    team: props.meeting?.team || props.team || null,
+    members:
+      props.meeting?.users ||
+      (props.member ? [currentUser, props.member] : [currentUser]),
     newAgendas: [],
     deletedAgendasId: [],
   } as MeetingData);
@@ -82,6 +86,21 @@ export default function MeetingFormDialog(props: Props) {
         ? checkedAgenda.filter((item) => item !== agenda)
         : [...checkedAgenda, agenda]
     );
+  };
+  const resetState = () => {
+    setCheckedAgenda(
+      props.meeting?.agendas.map((agenda) => agenda.agenda) || []
+    );
+    setMeetingData({
+      id: props.meeting?.id || null,
+      schedule: props.meeting?.schedule || null,
+      team: props.meeting?.team || props.team || null,
+      members:
+        props.meeting?.users ||
+        (props.member ? [currentUser!, props.member] : [currentUser!]),
+      newAgendas: [],
+      deletedAgendasId: [],
+    });
   };
   useEffect(() => {
     setMeetingData(
@@ -132,7 +151,7 @@ export default function MeetingFormDialog(props: Props) {
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
-          initialValue={props.meeting?.team}
+          initialValue={props.meeting?.team || props.team}
         />
         {!meetingData.team && (
           <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
@@ -148,7 +167,7 @@ export default function MeetingFormDialog(props: Props) {
           {meetingData.members.map((user: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
-              label={user.name}
+              label={user?.name}
               sx={{ margin: 0.2 }}
               onDelete={() => {
                 setMeetingData(
@@ -196,7 +215,10 @@ export default function MeetingFormDialog(props: Props) {
           登録
         </Button>
         <Button
-          onClick={() => props.onClickCancel()}
+          onClick={() => {
+            resetState();
+            props.onClickCancel();
+          }}
           variant="outlined"
           color="error"
           sx={{ width: "100%", padding: "10px", mt: 1 }}

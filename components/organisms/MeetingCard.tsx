@@ -11,11 +11,10 @@ import { useState } from "react";
 
 type Props = {
   meeting: Mtg;
-  onClickDialogSubmit: (meetingDate: MeetingData) => void;
+  onClick: () => void;
 };
 
 export default function MeetingCard(props: Props) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <Paper
       elevation={3}
@@ -53,18 +52,10 @@ export default function MeetingCard(props: Props) {
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
-        <Button size="small" variant="outlined" onClick={() => setIsOpen(true)}>
+        <Button size="small" variant="outlined" onClick={props.onClick}>
           詳細・編集
         </Button>
       </Box>
-      <MeetingFormDialog
-        open={isOpen}
-        meeting={props.meeting}
-        onClickCancel={() => {
-          setIsOpen(false);
-        }}
-        onClickSubmit={props.onClickDialogSubmit}
-      />
     </Paper>
   );
 }

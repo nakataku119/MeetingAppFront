@@ -17,6 +17,7 @@ import { useContext } from "react";
 
 type Prop = {
   member: User;
+  onClick: () => void;
 };
 
 export default function MemberCard(props: Prop) {
@@ -25,7 +26,7 @@ export default function MemberCard(props: Prop) {
   return (
     <Paper
       elevation={3}
-      sx={{ width: "30%", minWidth: 275, height: "45%", mr: 1 }}
+      sx={{ width: "30%", minWidth: 275, height: "100%", mr: 1 }}
     >
       <CardContent>
         <Box
@@ -57,7 +58,7 @@ export default function MemberCard(props: Prop) {
         </Typography>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
-        <Button size="small" variant="outlined">
+        <Button size="small" variant="outlined" onClick={props.onClick}>
           新規ミーティングを設定
         </Button>
       </Box>
