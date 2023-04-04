@@ -99,9 +99,9 @@ const GuestPage: NextPage = () => {
 
   const MemberCardList = () => {
     return (
-      <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {selectedTeam?.users.map((item: User, index: number) => (
-          <Box key={index} sx={{ pb: 1 }}>
+          <Box key={index} sx={{ pb: 1, width: 300, height: 250 }}>
             <MemberCard
               member={item}
               onClick={() => setNewMeetingMember(item)}
