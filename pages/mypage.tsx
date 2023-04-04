@@ -13,14 +13,17 @@ import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
 const MyPage: NextPage = () => {
-  const [teamMembers, setTeamMembers] = useState<User[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [editedMeeting, setEditedMeeting] = useState<Mtg | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-  const { hasToken } = useContext(AxiosClientContext);
 
-  const handleSelectTeam = (team: Team) => {
-    setTeamMembers(team.users);
+  const fetchCurrentUser = async () => {
+    const res = await axiosClient.get("/users/guest");
+    setCurrentUser(res.data);
   };
+
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: new Date(meetingData.schedule!),
@@ -28,13 +31,18 @@ const MyPage: NextPage = () => {
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
-    await axiosClient.post("/mtgs", {
-      data: reqData,
-    });
-    // .then((res) => router.push("/mypage"))
-    // .catch((error) => setError("登録できません。"))
-    // .then(() => {});
+    await axiosClient
+      .post("/mtgs", {
+        data: reqData,
+      })
+      .catch((error) => {})
+      .then(() => {
+        setNewMeetingMember(null);
+        setIsDialogOpen(false);
+        fetchCurrentUser();
+      });
   };
+
   const handleUpdateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: new Date(meetingData.schedule!),
@@ -42,39 +50,25 @@ const MyPage: NextPage = () => {
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
-    await axiosClient.put(`/mtgs/${meetingData.id}`, {
-      data: reqData,
-    });
-    // .then((res) => router.push("/mypage"))
-    // .catch((error) => setError("登録できません。"))
-    // .then(() => {
-    //   setDialogOpen(false);
-    // });
-    await axiosClient.delete("/agendas", {
-      data: {
-        agendas: meetingData.deletedAgendasId,
-      },
-    });
-    // .then((res) => router.push("/mypage"))
-    // .catch((error) => setError("登録できません。"))
-    // .then(() => {
-    //   setDialogOpen(false);
-    // });
-  };
-  const handleUpdateUser = async (name: string) => {
-    console.log(name);
+
     await axiosClient
-      .put("/users", { name: name })
-      .then((res) => fetchCurrentUser())
-      .catch((error) => console.log(error));
-  };
-  const fetchCurrentUser = async () => {
-    await axiosClient
-      .get("/users/me")
-      .then((res) => {
-        setCurrentUser(res.data);
+      .delete("/agendas", {
+        data: {
+          agendas: meetingData.deletedAgendasId,
+        },
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {});
+
+    await axiosClient
+      .put(`/mtgs/${meetingData.id}`, {
+        data: reqData,
+      })
+      .catch((error) => {})
+      .then(() => {
+        setNewMeetingMember(null);
+        setIsDialogOpen(false);
+        fetchCurrentUser();
+      });
   };
 
   const MeetingCardList = () => {
@@ -83,11 +77,22 @@ const MyPage: NextPage = () => {
       <Box sx={{ height: "40%", display: "flex" }}>
         {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
-            <MeetingCard
-              meeting={meeting}
-              key={index}
-              onClickDialogSubmit={handleUpdateMeeting}
-            />
+            <Box key={index}>
+              <MeetingCard
+                meeting={meeting}
+                onClick={() => {
+                  setEditedMeeting(meeting);
+                }}
+              />
+              <MeetingFormDialog
+                onClickSubmit={handleUpdateMeeting}
+                onClickCancel={() => {
+                  setEditedMeeting(null);
+                }}
+                open={meeting == editedMeeting}
+                meeting={meeting}
+              />
+            </Box>
           );
         })}
       </Box>
@@ -97,12 +102,28 @@ const MyPage: NextPage = () => {
   const MemberCardList = () => {
     return (
       <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
-        {teamMembers.map((item: User, index: number) => (
-          <MemberCard key={index} member={item} />
+        {selectedTeam?.users.map((item: User, index: number) => (
+          <Box key={index} sx={{ pb: 1 }}>
+            <MemberCard
+              member={item}
+              onClick={() => setNewMeetingMember(item)}
+            />
+            <MeetingFormDialog
+              onClickSubmit={handleCreateMeeting}
+              onClickCancel={() => setNewMeetingMember(null)}
+              open={item == newMeetingMember}
+              member={item}
+              team={selectedTeam}
+            />
+          </Box>
         ))}
       </Box>
     );
   };
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
 
   if (currentUser) {
     return (
@@ -136,20 +157,16 @@ const MyPage: NextPage = () => {
           </Typography>
           <TeamSelectForm
             belongedTeam={currentUser.teams}
-            onSelectTeam={handleSelectTeam}
+            onSelectTeam={(team: Team) => setSelectedTeam(team)}
           />
         </Box>
         <MemberCardList />
-        <SignupFormDialog
-          open={!currentUser.name}
-          onClickConfirm={handleUpdateUser}
-        />
       </Box>
     );
   } else {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
-        {!hasToken ? <LoginButtonDialog /> : <p>waiting...</p>}
+        <p>waiting...</p>
       </Box>
     );
   }
