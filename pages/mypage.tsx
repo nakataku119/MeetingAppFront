@@ -19,11 +19,6 @@ const MyPage: NextPage = () => {
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
-  const fetchCurrentUser = async () => {
-    const res = await axiosClient.get("/users/guest");
-    setCurrentUser(res.data);
-  };
-
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: new Date(meetingData.schedule!),
@@ -39,7 +34,6 @@ const MyPage: NextPage = () => {
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
-        fetchCurrentUser();
       });
   };
 
@@ -67,7 +61,6 @@ const MyPage: NextPage = () => {
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
-        fetchCurrentUser();
       });
   };
 
@@ -120,10 +113,6 @@ const MyPage: NextPage = () => {
       </Box>
     );
   };
-
-  useEffect(() => {
-    fetchCurrentUser();
-  }, []);
 
   if (currentUser) {
     return (
