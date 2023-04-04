@@ -20,12 +20,14 @@ import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 import moment from "moment";
 import "moment-timezone";
+import { errorSelector } from "recoil";
 
 type Props = {
   meeting?: Mtg;
   member?: User;
   team?: Team;
   open: boolean;
+  errors?: string[];
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
 };
@@ -33,7 +35,7 @@ type Props = {
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
@@ -205,7 +207,8 @@ export default function MeetingFormDialog(props: Props) {
           disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
         />
-        {error && <p>{error}</p>}
+        {props.errors?.length != 0 &&
+          props.errors?.map((error) => <p>{`・ ${error}`}</p>)}
         <Button
           type="submit"
           variant="outlined"

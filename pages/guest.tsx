@@ -6,7 +6,7 @@ import MemberCard from "@/components/organisms/MemberCard";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -15,6 +15,7 @@ const GuestPage: NextPage = () => {
   const [editedMeeting, setEditedMeeting] = useState<Mtg | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const fetchCurrentUser = async () => {
@@ -24,20 +25,28 @@ const GuestPage: NextPage = () => {
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
-      schedule: new Date(meetingData.schedule!),
+      schedule: meetingData.schedule ? new Date(meetingData.schedule) : null,
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
+    setErrors([]);
     await axiosClient
       .post("/mtgs", {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
         fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
@@ -141,6 +150,7 @@ const GuestPage: NextPage = () => {
             open={isDialogOpen}
             onClickCancel={() => setIsDialogOpen(false)}
             onClickSubmit={handleCreateMeeting}
+            errors={errors}
           />
         </Box>
         <MeetingCardList />
