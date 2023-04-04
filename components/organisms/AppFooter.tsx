@@ -1,10 +1,10 @@
 import * as React from "react";
 import Typography from "@mui/material/Typography";
-import { Container } from "@mui/material";
+import { BottomNavigation, Container } from "@mui/material";
 
 export default function AppFooter() {
   return (
-    <Container
+    <BottomNavigation
       sx={{
         flexGrow: 1,
         color: "#cff09e",
@@ -20,6 +20,6 @@ export default function AppFooter() {
       >
         footer
       </Typography>
-    </Container>
+    </BottomNavigation>
   );
 }
