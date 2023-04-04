@@ -23,6 +23,7 @@ import "moment-timezone";
 
 type Props = {
   meeting?: Mtg;
+  member?: User;
   open: boolean;
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
@@ -36,7 +37,9 @@ export default function MeetingFormDialog(props: Props) {
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
     team: props.meeting?.team || null,
-    members: props.meeting?.users || [currentUser],
+    members:
+      props.meeting?.users ||
+      (props.member ? [currentUser, props.member] : [currentUser]),
     newAgendas: [],
     deletedAgendasId: [],
   } as MeetingData);
@@ -148,7 +151,7 @@ export default function MeetingFormDialog(props: Props) {
           {meetingData.members.map((user: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}
-              label={user.name}
+              label={user?.name}
               sx={{ margin: 0.2 }}
               onDelete={() => {
                 setMeetingData(

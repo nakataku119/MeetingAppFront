@@ -13,6 +13,7 @@ import React, { useContext, useEffect, useState } from "react";
 const GuestPage: NextPage = () => {
   const [teamMembers, setTeamMembers] = useState<User[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const handleSelectTeam = (team: Team) => {
@@ -88,7 +89,18 @@ const GuestPage: NextPage = () => {
     return (
       <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
         {teamMembers.map((item: User, index: number) => (
-          <MemberCard key={index} member={item} />
+          <Box key={index} sx={{ pb: 1 }}>
+            <MemberCard
+              member={item}
+              onClick={() => setNewMeetingMember(item)}
+            />
+            <MeetingFormDialog
+              onClickSubmit={() => {}}
+              onClickCancel={() => setNewMeetingMember(null)}
+              open={item == newMeetingMember}
+              member={item}
+            />
+          </Box>
         ))}
       </Box>
     );
