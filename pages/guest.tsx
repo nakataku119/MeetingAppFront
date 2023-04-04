@@ -11,14 +11,11 @@ import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
 const GuestPage: NextPage = () => {
-  const [teamMembers, setTeamMembers] = useState<User[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
-  const handleSelectTeam = (team: Team) => {
-    setTeamMembers(team.users);
-  };
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: new Date(meetingData.schedule!),
@@ -88,7 +85,7 @@ const GuestPage: NextPage = () => {
   const MemberCardList = () => {
     return (
       <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
-        {teamMembers.map((item: User, index: number) => (
+        {selectedTeam?.users.map((item: User, index: number) => (
           <Box key={index} sx={{ pb: 1 }}>
             <MemberCard
               member={item}
@@ -99,6 +96,7 @@ const GuestPage: NextPage = () => {
               onClickCancel={() => setNewMeetingMember(null)}
               open={item == newMeetingMember}
               member={item}
+              // team={}
             />
           </Box>
         ))}
@@ -138,7 +136,7 @@ const GuestPage: NextPage = () => {
           </Typography>
           <TeamSelectForm
             belongedTeam={currentUser.teams}
-            onSelectTeam={handleSelectTeam}
+            onSelectTeam={(team: Team) => setSelectedTeam(team)}
           />
         </Box>
         <MemberCardList />
