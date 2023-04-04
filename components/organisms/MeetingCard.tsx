@@ -18,9 +18,9 @@ export default function MeetingCard(props: Props) {
   return (
     <Paper
       elevation={3}
-      sx={{ width: "30%", minWidth: 275, height: "100%", mr: 1 }}
+      sx={{ width: "30%", minWidth: 275, height: "95%", mr: 1 }}
     >
-      <CardContent sx={{ height: "90%" }}>
+      <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary">
           ミーティング予定
         </Typography>
