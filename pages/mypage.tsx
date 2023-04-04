@@ -68,10 +68,10 @@ const MyPage: NextPage = () => {
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     return (
-      <Box sx={{ height: "40%", display: "flex" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
-            <Box key={index}>
+            <Box key={index} sx={{ width: 300, height: 500 }}>
               <MeetingCard
                 meeting={meeting}
                 onClick={() => {
@@ -95,9 +95,9 @@ const MyPage: NextPage = () => {
 
   const MemberCardList = () => {
     return (
-      <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {selectedTeam?.users.map((item: User, index: number) => (
-          <Box key={index} sx={{ pb: 1 }}>
+          <Box key={index} sx={{ pb: 1, width: 300, height: 250 }}>
             <MemberCard
               member={item}
               onClick={() => setNewMeetingMember(item)}
