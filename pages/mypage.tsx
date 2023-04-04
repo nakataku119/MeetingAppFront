@@ -69,7 +69,14 @@ const MyPage: NextPage = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     if (planedMeetings.length == 0) {
       return (
-        <Box sx={{ minHeight: 600, textAlign: "center" }}>
+        <Box
+          sx={{
+            minHeight: 600,
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
           <Typography variant="h5" component="h1" color="text.secondary">
             予定がありません。
           </Typography>
@@ -103,6 +110,22 @@ const MyPage: NextPage = () => {
   };
 
   const MemberCardList = () => {
+    if (!selectedTeam) {
+      return (
+        <Box
+          sx={{
+            minHeight: 600,
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Typography variant="h5" component="h1" color="text.secondary">
+            チームを選択してください。
+          </Typography>
+        </Box>
+      );
+    }
     return (
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {selectedTeam?.users.map((item: User, index: number) => (
