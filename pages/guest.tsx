@@ -125,7 +125,7 @@ const GuestPage: NextPage = () => {
 
   if (currentUser) {
     return (
-      <Box sx={{ width: 1, height: "100vh" }}>
+      <Box sx={{ width: 1, border: 1 }}>
         <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
           <Typography variant="h5" component="h1" color="text.secondary">
             今後のミーティング
