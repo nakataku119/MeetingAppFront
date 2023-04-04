@@ -67,11 +67,27 @@ const MyPage: NextPage = () => {
 
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    if (planedMeetings.length == 0) {
+      return (
+        <Box
+          sx={{
+            minHeight: 600,
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Typography variant="h5" component="h1" color="text.secondary">
+            予定がありません。
+          </Typography>
+        </Box>
+      );
+    }
     return (
-      <Box sx={{ height: "40%", display: "flex" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", minHeight: 600 }}>
         {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
-            <Box key={index}>
+            <Box key={index} sx={{ width: 300, height: 500 }}>
               <MeetingCard
                 meeting={meeting}
                 onClick={() => {
@@ -94,10 +110,26 @@ const MyPage: NextPage = () => {
   };
 
   const MemberCardList = () => {
+    if (!selectedTeam) {
+      return (
+        <Box
+          sx={{
+            minHeight: 600,
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Typography variant="h5" component="h1" color="text.secondary">
+            チームを選択してください。
+          </Typography>
+        </Box>
+      );
+    }
     return (
-      <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {selectedTeam?.users.map((item: User, index: number) => (
-          <Box key={index} sx={{ pb: 1 }}>
+          <Box key={index} sx={{ pb: 1, width: 300, height: 250 }}>
             <MemberCard
               member={item}
               onClick={() => setNewMeetingMember(item)}

@@ -26,9 +26,9 @@ export default function MemberCard(props: Prop) {
   return (
     <Paper
       elevation={3}
-      sx={{ width: "30%", minWidth: 275, height: "100%", mr: 1 }}
+      sx={{ height: "95%", mr: 1, display: "flex", flexDirection: "column" }}
     >
-      <CardContent>
+      <CardContent sx={{ height: "90%" }}>
         <Box
           sx={{
             display: "flex",
@@ -57,7 +57,7 @@ export default function MemberCard(props: Prop) {
           {getLastMeetingSchedule(currentUser!, member)}
         </Typography>
       </CardContent>
-      <Box sx={{ textAlign: "center" }}>
+      <Box sx={{ textAlign: "center", p: 1 }}>
         <Button size="small" variant="outlined" onClick={props.onClick}>
           新規ミーティングを設定
         </Button>
