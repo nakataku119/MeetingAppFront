@@ -96,7 +96,7 @@ const GuestPage: NextPage = () => {
               onClickCancel={() => setNewMeetingMember(null)}
               open={item == newMeetingMember}
               member={item}
-              // team={}
+              team={selectedTeam}
             />
           </Box>
         ))}

@@ -24,6 +24,7 @@ import "moment-timezone";
 type Props = {
   meeting?: Mtg;
   member?: User;
+  team?: Team;
   open: boolean;
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
@@ -36,7 +37,7 @@ export default function MeetingFormDialog(props: Props) {
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
-    team: props.meeting?.team || null,
+    team: props.meeting?.team || props.team || null,
     members:
       props.meeting?.users ||
       (props.member ? [currentUser, props.member] : [currentUser]),
@@ -135,7 +136,7 @@ export default function MeetingFormDialog(props: Props) {
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
           onSelectTeam={handleSelectTeam}
-          initialValue={props.meeting?.team}
+          initialValue={props.meeting?.team || props.team}
         />
         {!meetingData.team && (
           <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
