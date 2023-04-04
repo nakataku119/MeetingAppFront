@@ -67,8 +67,17 @@ const MyPage: NextPage = () => {
 
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    if (planedMeetings.length == 0) {
+      return (
+        <Box sx={{ minHeight: 600, textAlign: "center" }}>
+          <Typography variant="h5" component="h1" color="text.secondary">
+            予定がありません。
+          </Typography>
+        </Box>
+      );
+    }
     return (
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", minHeight: 600 }}>
         {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
             <Box key={index} sx={{ width: 300, height: 500 }}>
