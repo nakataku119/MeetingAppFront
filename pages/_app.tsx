@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <main className={styles.main}>
                   <Component {...pageProps} />
                 </main>
-                <AppFooter />
+                {/* <AppFooter /> */}
               </>
             </LocalizationProvider>
           </CurrentUserProvider>
