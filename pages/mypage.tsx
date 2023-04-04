@@ -18,6 +18,7 @@ const MyPage: NextPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { hasToken } = useContext(AxiosClientContext);
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
@@ -155,7 +156,7 @@ const MyPage: NextPage = () => {
   } else {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
-        <p>waiting...</p>
+        {!hasToken ? <LoginButtonDialog /> : <p>waiting...</p>}
       </Box>
     );
   }
