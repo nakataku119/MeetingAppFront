@@ -87,6 +87,21 @@ export default function MeetingFormDialog(props: Props) {
         : [...checkedAgenda, agenda]
     );
   };
+  const resetState = () => {
+    setCheckedAgenda(
+      props.meeting?.agendas.map((agenda) => agenda.agenda) || []
+    );
+    setMeetingData({
+      id: props.meeting?.id || null,
+      schedule: props.meeting?.schedule || null,
+      team: props.meeting?.team || props.team || null,
+      members:
+        props.meeting?.users ||
+        (props.member ? [currentUser!, props.member] : [currentUser!]),
+      newAgendas: [],
+      deletedAgendasId: [],
+    });
+  };
   useEffect(() => {
     setMeetingData(
       Object.assign({}, meetingData, {
@@ -200,7 +215,10 @@ export default function MeetingFormDialog(props: Props) {
           登録
         </Button>
         <Button
-          onClick={() => props.onClickCancel()}
+          onClick={() => {
+            resetState();
+            props.onClickCancel();
+          }}
           variant="outlined"
           color="error"
           sx={{ width: "100%", padding: "10px", mt: 1 }}
