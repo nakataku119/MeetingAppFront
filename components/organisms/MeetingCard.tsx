@@ -18,9 +18,14 @@ export default function MeetingCard(props: Props) {
   return (
     <Paper
       elevation={3}
-      sx={{ width: "30%", minWidth: 275, height: "95%", mr: 1 }}
+      sx={{
+        height: "95%",
+        mr: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      <CardContent>
+      <CardContent sx={{ height: "90%" }}>
         <Typography sx={{ fontSize: 14 }} color="text.secondary">
           ミーティング予定
         </Typography>
@@ -30,7 +35,7 @@ export default function MeetingCard(props: Props) {
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー
         </Typography>
-        <Box sx={{ border: 1, borderRadius: 2, height: "30%", padding: 0.5 }}>
+        <Box sx={{ border: 1, borderRadius: 2, padding: 0.5 }}>
           {props.meeting.users.map((item: User, index: number) => (
             <Chip
               avatar={<Avatar>F</Avatar>}

@@ -72,10 +72,10 @@ const GuestPage: NextPage = () => {
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     return (
-      <Box sx={{ display: "flex", flexWrap: "wrap", border: 1 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {planedMeetings.map((meeting: Mtg, index: number) => {
           return (
-            <Box key={index} sx={{ border: 1, width: 300, height: 500 }}>
+            <Box key={index} sx={{ width: 300, height: 500 }}>
               <MeetingCard
                 meeting={meeting}
                 onClick={() => {
