@@ -148,7 +148,10 @@ const GuestPage: NextPage = () => {
           </Button>
           <MeetingFormDialog
             open={isDialogOpen}
-            onClickCancel={() => setIsDialogOpen(false)}
+            onClickCancel={() => {
+              setIsDialogOpen(false);
+              setErrors([]);
+            }}
             onClickSubmit={handleCreateMeeting}
             errors={errors}
           />
