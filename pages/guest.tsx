@@ -16,6 +16,11 @@ const GuestPage: NextPage = () => {
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
+  const fetchCurrentUser = async () => {
+    const res = await axiosClient.get("/users/guest");
+    setCurrentUser(res.data);
+  };
+
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: new Date(meetingData.schedule!),
@@ -23,12 +28,16 @@ const GuestPage: NextPage = () => {
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
-    await axiosClient.post("/mtgs", {
-      data: reqData,
-    });
-    // .then((res) => router.push("/mypage"))
-    // .catch((error) => setError("登録できません。"))
-    // .then(() => {});
+    await axiosClient
+      .post("/mtgs", {
+        data: reqData,
+      })
+      .catch((error) => {})
+      .then(() => {
+        setNewMeetingMember(null);
+        setIsDialogOpen(false);
+        fetchCurrentUser();
+      });
   };
   const handleUpdateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
@@ -58,10 +67,6 @@ const GuestPage: NextPage = () => {
   };
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const res = await axiosClient.get("/users/guest");
-      setCurrentUser(res.data);
-    };
     fetchCurrentUser();
   }, []);
 
@@ -92,7 +97,7 @@ const GuestPage: NextPage = () => {
               onClick={() => setNewMeetingMember(item)}
             />
             <MeetingFormDialog
-              onClickSubmit={() => {}}
+              onClickSubmit={handleCreateMeeting}
               onClickCancel={() => setNewMeetingMember(null)}
               open={item == newMeetingMember}
               member={item}
