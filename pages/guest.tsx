@@ -2,6 +2,7 @@ import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import MeetingCard from "@/components/organisms/MeetingCard";
 import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
+import MemberCard from "@/components/organisms/MemberCard";
 import MemberCardContainer from "@/components/organisms/MemberCardContainer";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
@@ -84,6 +85,16 @@ const GuestPage: NextPage = () => {
     );
   };
 
+  const MemberCardList = () => {
+    return (
+      <Box sx={{ height: "50%", display: "flex", flexWrap: "wrap" }}>
+        {teamMembers.map((item: User, index: number) => (
+          <MemberCard key={index} member={item} />
+        ))}
+      </Box>
+    );
+  };
+
   if (currentUser) {
     return (
       <Box sx={{ width: 1, height: "100vh" }}>
@@ -119,7 +130,7 @@ const GuestPage: NextPage = () => {
             onSelectTeam={handleSelectTeam}
           />
         </Box>
-        <MemberCardContainer members={teamMembers} />
+        <MemberCardList />
       </Box>
     );
   } else {
