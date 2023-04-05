@@ -39,14 +39,19 @@ export default function TeamsList(props: Props) {
       name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
+    if (!reqData.name) {
+      return;
+    }
     await axiosClient
       .post("/teams", {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setOpenNewDialog(false);
         fetchAllTeams();
+      })
+      .catch((error) => {
+        console.log("チーム登録時のエラー発生");
       });
   };
   const handleUpdateTeam = async (

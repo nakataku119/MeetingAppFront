@@ -6,7 +6,7 @@ import MemberCard from "@/components/organisms/MemberCard";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -15,6 +15,7 @@ const GuestPage: NextPage = () => {
   const [editedMeeting, setEditedMeeting] = useState<Mtg | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const fetchCurrentUser = async () => {
@@ -24,20 +25,28 @@ const GuestPage: NextPage = () => {
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
-      schedule: new Date(meetingData.schedule!),
+      schedule: meetingData.schedule ? new Date(meetingData.schedule) : null,
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
+    setErrors([]);
     await axiosClient
       .post("/mtgs", {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
         fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
@@ -55,17 +64,26 @@ const GuestPage: NextPage = () => {
           agendas: meetingData.deletedAgendasId,
         },
       })
-      .catch((error) => {});
+      .catch((error) =>
+        setErrors((preValue) => [...preValue, "エラーが発生しました。"])
+      );
 
     await axiosClient
       .put(`/mtgs/${meetingData.id}`, {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
         fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
@@ -86,9 +104,11 @@ const GuestPage: NextPage = () => {
                 onClickSubmit={handleUpdateMeeting}
                 onClickCancel={() => {
                   setEditedMeeting(null);
+                  setErrors([]);
                 }}
                 open={meeting == editedMeeting}
                 meeting={meeting}
+                errors={errors}
               />
             </Box>
           );
@@ -108,10 +128,14 @@ const GuestPage: NextPage = () => {
             />
             <MeetingFormDialog
               onClickSubmit={handleCreateMeeting}
-              onClickCancel={() => setNewMeetingMember(null)}
+              onClickCancel={() => {
+                setNewMeetingMember(null);
+                setErrors([]);
+              }}
               open={item == newMeetingMember}
               member={item}
               team={selectedTeam}
+              errors={errors}
             />
           </Box>
         ))}
@@ -139,8 +163,12 @@ const GuestPage: NextPage = () => {
           </Button>
           <MeetingFormDialog
             open={isDialogOpen}
-            onClickCancel={() => setIsDialogOpen(false)}
+            onClickCancel={() => {
+              setIsDialogOpen(false);
+              setErrors([]);
+            }}
             onClickSubmit={handleCreateMeeting}
+            errors={errors}
           />
         </Box>
         <MeetingCardList />

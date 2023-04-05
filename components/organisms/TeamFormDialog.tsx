@@ -48,9 +48,6 @@ export default function TeamFormDialog(props: Props) {
     setCandidateUsers([]);
     setJoinedMembers([...joinedMembers, member]);
   };
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-  };
   const resetState = () => {
     setJoinedMembers(props.team?.users || []);
     setCandidateUsers([]);
@@ -63,7 +60,6 @@ export default function TeamFormDialog(props: Props) {
         elevation={3}
         component="form"
         sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
-        onSubmit={handleSubmit}
       >
         <TextField
           id="team-name"
@@ -72,6 +68,7 @@ export default function TeamFormDialog(props: Props) {
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
           onChange={(event) => handleChangeTeamText(event.target.value)}
+          required
         />
         <Box
           sx={{ border: 1, borderRadius: 2, height: 100, padding: 0.5, mb: 1 }}
@@ -118,6 +115,7 @@ export default function TeamFormDialog(props: Props) {
             resetState();
             props.onClickSubmit(joinedMembers, teamName, props.team?.id);
           }}
+          disabled={!teamName}
         >
           {props.buttonTitle}
         </Button>
