@@ -26,6 +26,18 @@ const MyPage: NextPage = () => {
     setCurrentUser(res.data);
   };
 
+  const handleSignupUser = async (name: string) => {
+    const reqDate = {
+      name: name,
+    };
+    await axiosClient
+      .put("/users", reqDate)
+      .then(() => {
+        fetchCurrentUser();
+      })
+      .catch((error) => console.log(error));
+  };
+
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
       schedule: meetingData.schedule ? new Date(meetingData.schedule) : null,
@@ -181,6 +193,10 @@ const MyPage: NextPage = () => {
   if (currentUser) {
     return (
       <Box sx={{ width: 1 }}>
+        <SignupFormDialog
+          open={!currentUser.name}
+          onClickConfirm={handleSignupUser}
+        />
         <Box sx={{ display: "flex", p: 1, justifyContent: "space-between" }}>
           <Typography variant="h5" component="h1" color="text.secondary">
             今後のミーティング
