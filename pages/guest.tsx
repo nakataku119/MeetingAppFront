@@ -57,6 +57,7 @@ const GuestPage: NextPage = () => {
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
+      freeAgenda: meetingData.freeAgenda,
     };
 
     await axiosClient

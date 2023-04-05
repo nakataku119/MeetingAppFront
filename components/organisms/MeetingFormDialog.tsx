@@ -221,6 +221,7 @@ export default function MeetingFormDialog(props: Props) {
           onChange={(event) => handleChangeFreeAgenda(event.target.value)}
           multiline
           maxRows={4}
+          value={meetingData.freeAgenda}
         />
         {props.errors.length != 0 &&
           props.errors.map((error, index) => (
