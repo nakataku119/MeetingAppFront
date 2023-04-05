@@ -54,6 +54,7 @@ export default function MeetingCard(props: Props) {
           {props.meeting.agendas.map((item: Agenda, index: number) => (
             <li key={index}>{item.agenda}</li>
           ))}
+          {props.meeting.freeAgenda && <li>{props.meeting.freeAgenda}</li>}
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>

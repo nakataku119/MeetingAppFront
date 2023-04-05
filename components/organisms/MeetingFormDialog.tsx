@@ -14,13 +14,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 import moment from "moment";
 import "moment-timezone";
-import { errorSelector } from "recoil";
 
 type Props = {
   meeting?: Mtg;
@@ -42,6 +40,7 @@ export default function MeetingFormDialog(props: Props) {
     members:
       props.meeting?.users ||
       (props.member ? [currentUser, props.member] : [currentUser]),
+    freeAgenda: props.meeting?.freeAgenda,
     newAgendas: [],
     deletedAgendasId: [],
   } as MeetingData);
@@ -86,6 +85,13 @@ export default function MeetingFormDialog(props: Props) {
       checkedAgenda.includes(agenda)
         ? checkedAgenda.filter((item) => item !== agenda)
         : [...checkedAgenda, agenda]
+    );
+  };
+  const handleChangeFreeAgenda = (text: string) => {
+    setMeetingData(
+      Object.assign({}, meetingData, {
+        freeAgenda: text,
+      })
     );
   };
   const resetState = () => {
@@ -206,6 +212,17 @@ export default function MeetingFormDialog(props: Props) {
           disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
         />
+        <TextField
+          id="other-agenda"
+          label="その他"
+          variant="filled"
+          sx={{ width: "100%", pb: 1 }}
+          disabled={!meetingData.team}
+          onChange={(event) => handleChangeFreeAgenda(event.target.value)}
+          multiline
+          maxRows={4}
+          value={meetingData.freeAgenda}
+        />
         {props.errors.length != 0 &&
           props.errors.map((error, index) => (
             <p key={index}>{`・ ${error}`}</p>
@@ -214,7 +231,10 @@ export default function MeetingFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() => props.onClickSubmit(meetingData)}
+          onClick={() => {
+            resetState();
+            props.onClickSubmit(meetingData);
+          }}
           disabled={!meetingData.schedule || !meetingData.team}
         >
           登録

@@ -17,6 +17,7 @@ export type Mtg = {
   schedule: Date;
   team: Team;
   agendas: Agenda[];
+  freeAgenda?: string;
   users: User[];
 };
 
@@ -30,6 +31,7 @@ export type MeetingData = {
   id: number | null;
   schedule: Date | null;
   team: Team | null;
+  freeAgenda?: string;
   members: Array<User>;
   newAgendas: { agenda: string }[];
   deletedAgendasId: number[];
