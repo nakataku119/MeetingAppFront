@@ -8,7 +8,7 @@ import SignupFormDialog from "@/components/organisms/SignupFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Box, Button, Container, Dialog, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -44,6 +44,7 @@ const MyPage: NextPage = () => {
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
+      freeAgenda: meetingData.freeAgenda,
     };
     setErrors([]);
     await axiosClient
@@ -71,6 +72,7 @@ const MyPage: NextPage = () => {
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
+      freeAgenda: meetingData.freeAgenda,
     };
 
     await axiosClient
