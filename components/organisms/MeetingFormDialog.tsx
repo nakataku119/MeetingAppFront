@@ -35,6 +35,7 @@ type Props = {
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
+  const [freeAgenda, setFreeAgenda] = useState<string>("");
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
@@ -92,6 +93,7 @@ export default function MeetingFormDialog(props: Props) {
     setCheckedAgenda(
       props.meeting?.agendas.map((agenda) => agenda.agenda) || []
     );
+    setFreeAgenda("");
     setMeetingData({
       id: props.meeting?.id || null,
       schedule: props.meeting?.schedule || null,
@@ -205,6 +207,16 @@ export default function MeetingFormDialog(props: Props) {
           onChange={handleChangeAgendas}
           disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
+        />
+        <TextField
+          id="other-agenda"
+          label="その他"
+          variant="filled"
+          sx={{ width: "100%", pb: 1 }}
+          disabled={!meetingData.team}
+          onChange={(event) => setFreeAgenda(event.target.value)}
+          multiline
+          maxRows={4}
         />
         {props.errors.length != 0 &&
           props.errors.map((error, index) => (
