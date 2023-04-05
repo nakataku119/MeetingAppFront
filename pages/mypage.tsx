@@ -17,24 +17,39 @@ const MyPage: NextPage = () => {
   const [editedMeeting, setEditedMeeting] = useState<Mtg | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { hasToken } = useContext(AxiosClientContext);
 
+  const fetchCurrentUser = async () => {
+    const res = await axiosClient.get("/users/me");
+    setCurrentUser(res.data);
+  };
+
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
-      schedule: new Date(meetingData.schedule!),
+      schedule: meetingData.schedule ? new Date(meetingData.schedule) : null,
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
     };
+    setErrors([]);
     await axiosClient
       .post("/mtgs", {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
+        fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
@@ -52,16 +67,26 @@ const MyPage: NextPage = () => {
           agendas: meetingData.deletedAgendasId,
         },
       })
-      .catch((error) => {});
+      .catch((error) =>
+        setErrors((preValue) => [...preValue, "エラーが発生しました。"])
+      );
 
     await axiosClient
       .put(`/mtgs/${meetingData.id}`, {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
+        fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
@@ -163,8 +188,12 @@ const MyPage: NextPage = () => {
           </Button>
           <MeetingFormDialog
             open={isDialogOpen}
-            onClickCancel={() => setIsDialogOpen(false)}
+            onClickCancel={() => {
+              setIsDialogOpen(false);
+              setErrors([]);
+            }}
             onClickSubmit={handleCreateMeeting}
+            errors={errors}
           />
         </Box>
         <MeetingCardList />
