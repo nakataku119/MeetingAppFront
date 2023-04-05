@@ -27,7 +27,7 @@ type Props = {
   member?: User;
   team?: Team;
   open: boolean;
-  errors?: string[];
+  errors: string[];
   onClickCancel: () => void;
   onClickSubmit: (meetingData: MeetingData) => void;
 };
@@ -206,8 +206,8 @@ export default function MeetingFormDialog(props: Props) {
           disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
         />
-        {props.errors?.length != 0 &&
-          props.errors?.map((error) => <p>{`・ ${error}`}</p>)}
+        {props.errors.length != 0 &&
+          props.errors.map((error) => <p>{`・ ${error}`}</p>)}
         <Button
           type="submit"
           variant="outlined"

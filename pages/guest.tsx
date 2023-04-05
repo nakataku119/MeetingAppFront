@@ -104,9 +104,11 @@ const GuestPage: NextPage = () => {
                 onClickSubmit={handleUpdateMeeting}
                 onClickCancel={() => {
                   setEditedMeeting(null);
+                  setErrors([]);
                 }}
                 open={meeting == editedMeeting}
                 meeting={meeting}
+                errors={errors}
               />
             </Box>
           );
@@ -126,10 +128,14 @@ const GuestPage: NextPage = () => {
             />
             <MeetingFormDialog
               onClickSubmit={handleCreateMeeting}
-              onClickCancel={() => setNewMeetingMember(null)}
+              onClickCancel={() => {
+                setNewMeetingMember(null);
+                setErrors([]);
+              }}
               open={item == newMeetingMember}
               member={item}
               team={selectedTeam}
+              errors={errors}
             />
           </Box>
         ))}

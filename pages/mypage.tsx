@@ -123,9 +123,11 @@ const MyPage: NextPage = () => {
                 onClickSubmit={handleUpdateMeeting}
                 onClickCancel={() => {
                   setEditedMeeting(null);
+                  setErrors([]);
                 }}
                 open={meeting == editedMeeting}
                 meeting={meeting}
+                errors={errors}
               />
             </Box>
           );
@@ -161,10 +163,14 @@ const MyPage: NextPage = () => {
             />
             <MeetingFormDialog
               onClickSubmit={handleCreateMeeting}
-              onClickCancel={() => setNewMeetingMember(null)}
+              onClickCancel={() => {
+                setNewMeetingMember(null);
+                setErrors([]);
+              }}
               open={item == newMeetingMember}
               member={item}
               team={selectedTeam}
+              errors={errors}
             />
           </Box>
         ))}
