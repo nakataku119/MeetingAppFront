@@ -64,17 +64,26 @@ const GuestPage: NextPage = () => {
           agendas: meetingData.deletedAgendasId,
         },
       })
-      .catch((error) => {});
+      .catch((error) =>
+        setErrors((preValue) => [...preValue, "エラーが発生しました。"])
+      );
 
     await axiosClient
       .put(`/mtgs/${meetingData.id}`, {
         data: reqData,
       })
-      .catch((error) => {})
       .then(() => {
         setNewMeetingMember(null);
         setIsDialogOpen(false);
         fetchCurrentUser();
+      })
+      .catch((error) => {
+        if (!reqData.schedule) {
+          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
+        }
+        if (!reqData.teamId) {
+          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
+        }
       });
   };
 
