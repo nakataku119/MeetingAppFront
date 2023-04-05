@@ -30,7 +30,7 @@ const SwitchMenu = (props: { menu: string }) => {
   }
 };
 
-export default function AdminHone() {
+export default function AdminHome() {
   const menus = ["ユーザー", "チーム", "ミーティング"];
   const [displayedMenu, setDisplayedMenu] = useState<string>("ユーザー");
   const { currentUser } = useContext(CurrentUserContext);
