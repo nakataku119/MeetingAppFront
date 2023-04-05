@@ -14,13 +14,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRouter } from "next/router";
 import { FormEvent, memo, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 import moment from "moment";
 import "moment-timezone";
-import { errorSelector } from "recoil";
 
 type Props = {
   meeting?: Mtg;
@@ -35,7 +33,6 @@ type Props = {
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
-  const [freeAgenda, setFreeAgenda] = useState<string>("");
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
     schedule: props.meeting?.schedule || null,
@@ -43,6 +40,7 @@ export default function MeetingFormDialog(props: Props) {
     members:
       props.meeting?.users ||
       (props.member ? [currentUser, props.member] : [currentUser]),
+    freeAgenda: props.meeting?.freeAgenda,
     newAgendas: [],
     deletedAgendasId: [],
   } as MeetingData);
@@ -89,11 +87,17 @@ export default function MeetingFormDialog(props: Props) {
         : [...checkedAgenda, agenda]
     );
   };
+  const handleChangeFreeAgenda = (text: string) => {
+    setMeetingData(
+      Object.assign({}, meetingData, {
+        freeAgenda: text,
+      })
+    );
+  };
   const resetState = () => {
     setCheckedAgenda(
       props.meeting?.agendas.map((agenda) => agenda.agenda) || []
     );
-    setFreeAgenda("");
     setMeetingData({
       id: props.meeting?.id || null,
       schedule: props.meeting?.schedule || null,
@@ -214,7 +218,7 @@ export default function MeetingFormDialog(props: Props) {
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
           disabled={!meetingData.team}
-          onChange={(event) => setFreeAgenda(event.target.value)}
+          onChange={(event) => handleChangeFreeAgenda(event.target.value)}
           multiline
           maxRows={4}
         />
@@ -226,7 +230,10 @@ export default function MeetingFormDialog(props: Props) {
           type="submit"
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
-          onClick={() => props.onClickSubmit(meetingData)}
+          onClick={() => {
+            resetState();
+            props.onClickSubmit(meetingData);
+          }}
           disabled={!meetingData.schedule || !meetingData.team}
         >
           登録
