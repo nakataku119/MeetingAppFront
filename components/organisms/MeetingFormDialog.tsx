@@ -207,7 +207,9 @@ export default function MeetingFormDialog(props: Props) {
           checkedAgendas={checkedAgenda}
         />
         {props.errors.length != 0 &&
-          props.errors.map((error) => <p>{`・ ${error}`}</p>)}
+          props.errors.map((error, index) => (
+            <p key={index}>{`・ ${error}`}</p>
+          ))}
         <Button
           type="submit"
           variant="outlined"
