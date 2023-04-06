@@ -3,8 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { createContext, useEffect, useState } from "react";
 
 export const axiosClient: AxiosInstance = axios.create({
-  // baseURL: "https://meetingapp-server.tkynkhr.com",
-  baseURL: "http://localhost:8080",
+  baseURL: "https://meetingapp-server.tkynkhr.com",
+  // baseURL: "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
   timeout: 10000,
 });
