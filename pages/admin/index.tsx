@@ -24,11 +24,15 @@ const SwitchMenu = (props: { menu: string }) => {
     fetchAllUsers();
   };
 
+  const handleDelteTeam = async (teamId: number) => {
+    await axiosClient.delete(`/admin/teams/${teamId}`);
+  };
+
   switch (props.menu) {
     case "ユーザー":
       return <UsersList users={users} onClickDelete={handleDelteUser} />;
     case "チーム":
-      return <TeamsList allUsers={users} />;
+      return <TeamsList allUsers={users} onClickDelete={handleDelteTeam} />;
     case "ミーティング":
       return <>必要か検討</>;
     default:
