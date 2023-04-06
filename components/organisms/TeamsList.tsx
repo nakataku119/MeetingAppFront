@@ -15,6 +15,7 @@ import TeamFormDialog from "./TeamFormDialog";
 
 type Props = {
   allUsers: Array<User>;
+  onClickDelete: (teamId: number) => void;
 };
 
 export default function TeamsList(props: Props) {
@@ -43,7 +44,7 @@ export default function TeamsList(props: Props) {
       return;
     }
     await axiosClient
-      .post("/teams", {
+      .post("/admin/teams", {
         data: reqData,
       })
       .then(() => {
@@ -64,7 +65,7 @@ export default function TeamsList(props: Props) {
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
     await axiosClient
-      .put(`/teams/${teamId!}`, {
+      .put(`/admin/teams/${teamId!}`, {
         data: reqData,
       })
       .catch((error) => {})
@@ -128,6 +129,15 @@ export default function TeamsList(props: Props) {
                   onClickSubmit={handleUpdateTeam}
                   buttonTitle={"更新"}
                 />
+              </TableCell>
+              <TableCell component="th" scope="row">
+                <Button
+                  onClick={() => {
+                    props.onClickDelete(team.id);
+                  }}
+                >
+                  削除
+                </Button>
               </TableCell>
             </TableRow>
           ))}

@@ -10,19 +10,29 @@ import { useContext, useEffect, useState } from "react";
 const SwitchMenu = (props: { menu: string }) => {
   const [users, setUsers] = useState<Array<User>>([]);
 
+  const fetchAllUsers = async () => {
+    const res = await axiosClient.get("/admin/users");
+    setUsers(res.data);
+  };
+
   useEffect(() => {
-    const fetchAllUsers = async () => {
-      const res = await axiosClient.get("/admin/users");
-      setUsers(res.data);
-    };
     fetchAllUsers();
   }, []);
 
+  const handleDelteUser = async (userId: string) => {
+    await axiosClient.delete(`/admin/users/${userId}`);
+    fetchAllUsers();
+  };
+
+  const handleDelteTeam = async (teamId: number) => {
+    await axiosClient.delete(`/admin/teams/${teamId}`);
+  };
+
   switch (props.menu) {
     case "ユーザー":
-      return <UsersList users={users} />;
+      return <UsersList users={users} onClickDelete={handleDelteUser} />;
     case "チーム":
-      return <TeamsList allUsers={users} />;
+      return <TeamsList allUsers={users} onClickDelete={handleDelteTeam} />;
     case "ミーティング":
       return <>必要か検討</>;
     default:

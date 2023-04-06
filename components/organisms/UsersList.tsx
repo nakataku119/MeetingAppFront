@@ -12,6 +12,7 @@ import {
 
 type Props = {
   users: Array<User>;
+  onClickDelete: (id: string) => void;
 };
 
 export default function UsersList(props: Props) {
@@ -49,7 +50,9 @@ export default function UsersList(props: Props) {
                 {user.name}
               </TableCell>
               <TableCell component="th" scope="row">
-                <Button>削除</Button>
+                <Button onClick={() => props.onClickDelete(user.id)}>
+                  削除
+                </Button>
               </TableCell>
             </TableRow>
           ))}
