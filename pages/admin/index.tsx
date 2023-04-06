@@ -12,7 +12,7 @@ const SwitchMenu = (props: { menu: string }) => {
 
   useEffect(() => {
     const fetchAllUsers = async () => {
-      const res = await axiosClient.get("/users");
+      const res = await axiosClient.get("/admin/users");
       setUsers(res.data);
     };
     fetchAllUsers();

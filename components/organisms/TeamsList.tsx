@@ -27,7 +27,7 @@ export default function TeamsList(props: Props) {
   }, []);
 
   const fetchAllTeams = async () => {
-    const res = await axiosClient.get("/teams");
+    const res = await axiosClient.get("/admin/teams");
     setTeams(res.data);
   };
   const handleDialogCancel = () => {
