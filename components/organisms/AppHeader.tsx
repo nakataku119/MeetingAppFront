@@ -7,10 +7,17 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useAuth0 } from "@auth0/auth0-react";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
+import { axiosClient } from "@/axios/AxiosClientProvider";
 
 export default function AppHeader() {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const { currentUser } = React.useContext(CurrentUserContext);
+
+  const handleClickLogout = async () => {
+    await axiosClient.post("/logout");
+    logout();
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ color: "#cff09e", backgroundColor: "#3b8686", zIndex: 2 }}>
@@ -21,7 +28,11 @@ export default function AppHeader() {
           {currentUser ? (
             <>
               <p>name: {currentUser.name}</p>
-              <Button color="inherit" onClick={() => logout()} sx={{ pl: 5 }}>
+              <Button
+                color="inherit"
+                onClick={handleClickLogout}
+                sx={{ pl: 5 }}
+              >
                 ログアウト
               </Button>
               {currentUser.admin && (
