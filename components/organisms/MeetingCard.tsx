@@ -40,7 +40,6 @@ export default function MeetingCard(props: Props) {
               avatar={<Avatar>F</Avatar>}
               label={item.name}
               sx={{ margin: 0.2 }}
-              onDelete={() => {}}
               size="small"
               key={index}
             />
