@@ -104,6 +104,11 @@ const MyPage: NextPage = () => {
       });
   };
 
+  const handleDeleteMeeting = async (id: number) => {
+    await axiosClient.delete(`/mtgs/${id}`);
+    fetchCurrentUser();
+  };
+
   const MeetingCardList = () => {
     const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
     if (planedMeetings.length == 0) {
@@ -129,9 +134,10 @@ const MyPage: NextPage = () => {
             <Box key={index} sx={{ width: 300, height: 500 }}>
               <MeetingCard
                 meeting={meeting}
-                onClick={() => {
+                onClickEdit={() => {
                   setEditedMeeting(meeting);
                 }}
+                onClickDelete={() => handleDeleteMeeting(meeting.id)}
               />
               <MeetingFormDialog
                 onClickSubmit={handleUpdateMeeting}

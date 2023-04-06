@@ -4,14 +4,13 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
-import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
+import { Agenda, Mtg, User } from "@/utils/types";
 import { dateFormatter } from "@/utils/functions";
-import MeetingFormDialog from "./MeetingFormDialog";
-import { useState } from "react";
 
 type Props = {
   meeting: Mtg;
-  onClick: () => void;
+  onClickEdit: () => void;
+  onClickDelete: () => void;
 };
 
 export default function MeetingCard(props: Props) {
@@ -41,7 +40,6 @@ export default function MeetingCard(props: Props) {
               avatar={<Avatar>F</Avatar>}
               label={item.name}
               sx={{ margin: 0.2 }}
-              onDelete={() => {}}
               size="small"
               key={index}
             />
@@ -58,8 +56,17 @@ export default function MeetingCard(props: Props) {
         </Box>
       </CardContent>
       <Box sx={{ textAlign: "center" }}>
-        <Button size="small" variant="outlined" onClick={props.onClick}>
+        <Button size="small" variant="outlined" onClick={props.onClickEdit}>
           詳細・編集
+        </Button>
+        <Button
+          size="small"
+          variant="outlined"
+          color="error"
+          onClick={props.onClickDelete}
+          sx={{ ml: 1 }}
+        >
+          削除
         </Button>
       </Box>
     </Paper>
