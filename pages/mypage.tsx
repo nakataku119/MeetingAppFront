@@ -6,9 +6,10 @@ import MeetingFormDialog from "@/components/organisms/MeetingFormDialog";
 import MemberCard from "@/components/organisms/MemberCard";
 import SignupFormDialog from "@/components/organisms/SignupFormDialog";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
+import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -18,24 +19,29 @@ const MyPage: NextPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newMeetingMember, setNewMeetingMember] = useState<User | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const [error, setError] = useState<string>();
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { hasToken } = useContext(AxiosClientContext);
 
   const fetchCurrentUser = async () => {
-    const res = await axiosClient.get("/users/me");
-    setCurrentUser(res.data);
+    try {
+      const res = await axiosClient.get("/users/me");
+      setCurrentUser(res.data);
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   const handleSignupUser = async (name: string) => {
     const reqDate = {
       name: name,
     };
-    await axiosClient
-      .put("/users", reqDate)
-      .then(() => {
-        fetchCurrentUser();
-      })
-      .catch((error) => console.log(error));
+    try {
+      await axiosClient.put("/users", reqDate);
+      fetchCurrentUser();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
@@ -46,24 +52,19 @@ const MyPage: NextPage = () => {
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    setErrors([]);
-    await axiosClient
-      .post("/mtgs", {
+    if (!reqData.schedule || !reqData.teamId) {
+      return setError("スケジュールとチーム選択は必須です。");
+    }
+    try {
+      await axiosClient.post("/mtgs", {
         data: reqData,
-      })
-      .then(() => {
-        setNewMeetingMember(null);
-        setIsDialogOpen(false);
-        fetchCurrentUser();
-      })
-      .catch((error) => {
-        if (!reqData.schedule) {
-          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
-        }
-        if (!reqData.teamId) {
-          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
-        }
       });
+      setNewMeetingMember(null);
+      setIsDialogOpen(false);
+      fetchCurrentUser();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   const handleUpdateMeeting = async (meetingData: MeetingData) => {
@@ -74,39 +75,33 @@ const MyPage: NextPage = () => {
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-
-    await axiosClient
-      .delete("/agendas", {
+    if (!reqData.schedule || !reqData.teamId) {
+      return setError("スケジュールとチーム選択は必須です。");
+    }
+    try {
+      await axiosClient.delete("/agendas", {
         data: {
           agendas: meetingData.deletedAgendasId,
         },
-      })
-      .catch((error) =>
-        setErrors((preValue) => [...preValue, "エラーが発生しました。"])
-      );
-
-    await axiosClient
-      .put(`/mtgs/${meetingData.id}`, {
-        data: reqData,
-      })
-      .then(() => {
-        setNewMeetingMember(null);
-        setIsDialogOpen(false);
-        fetchCurrentUser();
-      })
-      .catch((error) => {
-        if (!reqData.schedule) {
-          setErrors((preValue) => [...preValue, "スケジュールは必須です。"]);
-        }
-        if (!reqData.teamId) {
-          setErrors((preValue) => [...preValue, "チームを選択してください。"]);
-        }
       });
+      await axiosClient.put(`/mtgs/${meetingData.id}`, {
+        data: reqData,
+      });
+      setNewMeetingMember(null);
+      setIsDialogOpen(false);
+      fetchCurrentUser();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   const handleDeleteMeeting = async (id: number) => {
-    await axiosClient.delete(`/mtgs/${id}`);
-    fetchCurrentUser();
+    try {
+      await axiosClient.delete(`/mtgs/${id}`);
+      fetchCurrentUser();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   const MeetingCardList = () => {
@@ -201,6 +196,7 @@ const MyPage: NextPage = () => {
   if (currentUser) {
     return (
       <Box sx={{ width: 1 }}>
+        {error && <Alert severity="error">{error}</Alert>}
         <SignupFormDialog
           open={!currentUser.name}
           onClickConfirm={handleSignupUser}

@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/utils/types";
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
-import { useRouter } from "next/router";
-import { useAuth0 } from "@auth0/auth0-react";
+import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
+import { Dialog } from "@mui/material";
 
 interface UserContextProps {
   currentUser: User | null;
@@ -21,34 +21,39 @@ const CurrentUserProvider = ({
 }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { hasToken } = useContext(AxiosClientContext);
-  const { isAuthenticated } = useAuth0();
-  const router = useRouter();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     if (hasToken) {
       fetchCurrentUser();
     }
   }, [hasToken]);
+
   const fetchCurrentUser = async () => {
-    await axiosClient
-      .get("/users/me")
-      .then((res) => {
-        if (!res.data) {
-          createUser();
-        } else {
-          setCurrentUser(res.data);
-        }
-      })
-      .catch((error) => console.log(error));
+    try {
+      const res = await axiosClient.get("/users/me");
+      if (!res.data) {
+        createUser();
+      } else {
+        setCurrentUser(res.data);
+      }
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
+
   const createUser = async () => {
-    await axiosClient
-      .post("/users", { name: "" })
-      .then(() => fetchCurrentUser());
+    try {
+      await axiosClient.post("/users", { name: "" });
+      fetchCurrentUser();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+      <Dialog open={Boolean(error)}>{error}</Dialog>
       {children}
     </CurrentUserContext.Provider>
   );

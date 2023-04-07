@@ -1,6 +1,5 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { Agenda, MeetingData, Mtg, Team, User } from "@/utils/types";
+import { MeetingData, Mtg, Team, User } from "@/utils/types";
 import {
   Alert,
   Avatar,
@@ -8,13 +7,12 @@ import {
   Button,
   Chip,
   Dialog,
-  DialogActions,
   MenuItem,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import { FormEvent, memo, useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 import moment from "moment";

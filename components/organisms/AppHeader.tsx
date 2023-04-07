@@ -10,12 +10,16 @@ import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { axiosClient } from "@/axios/AxiosClientProvider";
 
 export default function AppHeader() {
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { loginWithRedirect, logout } = useAuth0();
   const { currentUser } = React.useContext(CurrentUserContext);
 
   const handleClickLogout = async () => {
-    await axiosClient.post("/logout");
-    logout();
+    try {
+      await axiosClient.post("/logout");
+      logout();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
