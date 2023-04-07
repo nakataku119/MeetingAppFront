@@ -13,12 +13,10 @@ import {
   TableRow,
 } from "@mui/material";
 import TeamFormDialog from "./TeamFormDialog";
-import { AxiosError } from "axios";
 import { axiosErrorHandle } from "utils/axiosErrorHandle";
 
 type Props = {
   allUsers: Array<User>;
-  onClickDelete: (teamId: number) => void;
 };
 
 export default function TeamsList(props: Props) {
@@ -39,10 +37,12 @@ export default function TeamsList(props: Props) {
       axiosErrorHandle(error, setError);
     }
   };
+
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
     setOpenNewDialog(false);
   };
+
   const handleCreateTeam = async (joinedMembers: Array<User>, name: string) => {
     const reqData = {
       name: name,
@@ -51,18 +51,17 @@ export default function TeamsList(props: Props) {
     if (!reqData.name) {
       return;
     }
-    await axiosClient
-      .post("/admin/teams", {
-        data: reqData,
-      })
-      .then(() => {
-        setOpenNewDialog(false);
-        fetchAllTeams();
-      })
-      .catch((error) => {
-        console.log("チーム登録時のエラー発生");
+    try {
+      await axiosClient.post("/admin/teams", {
+        reqData,
       });
+      setOpenNewDialog(false);
+      fetchAllTeams();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
+
   const handleUpdateTeam = async (
     joinedMembers: Array<User>,
     name: string,
@@ -72,15 +71,24 @@ export default function TeamsList(props: Props) {
       name: name,
       members: joinedMembers.map((member) => ({ id: member.id })),
     };
-    await axiosClient
-      .put(`/admin/teams/${teamId!}`, {
-        data: reqData,
-      })
-      .catch((error) => {})
-      .then(() => {
-        setDialogOpenTeam(null);
-        fetchAllTeams();
+    try {
+      await axiosClient.put(`/admin/teams/${teamId!}`, {
+        reqData,
       });
+      setDialogOpenTeam(null);
+      fetchAllTeams();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
+  };
+
+  const handleDeleteTeam = async (team: Team) => {
+    try {
+      await axiosClient.delete(`/admin/teams/${team.id}`);
+      fetchAllTeams();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   return (
@@ -140,13 +148,7 @@ export default function TeamsList(props: Props) {
                 />
               </TableCell>
               <TableCell component="th" scope="row">
-                <Button
-                  onClick={() => {
-                    props.onClickDelete(team.id);
-                  }}
-                >
-                  削除
-                </Button>
+                <Button onClick={() => handleDeleteTeam(team)}>削除</Button>
               </TableCell>
             </TableRow>
           ))}
