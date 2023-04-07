@@ -9,8 +9,7 @@ import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
 import { getPlanedMeetings } from "@/utils/functions";
 import { MeetingData, Mtg, Team, User } from "@/utils/types";
-import { Schedule } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { Alert, Box, Button, Typography } from "@mui/material";
 import { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -197,6 +196,7 @@ const MyPage: NextPage = () => {
   if (currentUser) {
     return (
       <Box sx={{ width: 1 }}>
+        {error && <Alert severity="error">{error}</Alert>}
         <SignupFormDialog
           open={!currentUser.name}
           onClickConfirm={handleSignupUser}
