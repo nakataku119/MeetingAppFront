@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import TeamFormDialog from "./TeamFormDialog";
 import { AxiosError } from "axios";
+import { axiosErrorHandle } from "utils/axiosErrorHandle";
 
 type Props = {
   allUsers: Array<User>;
@@ -35,18 +36,7 @@ export default function TeamsList(props: Props) {
       const res = await axiosClient.get("/admin/teams");
       setTeams(res.data);
     } catch (error) {
-      const axiosError = error as AxiosError;
-      if (axiosError.response) {
-        console.log((axiosError.response.data as { error: string }).error);
-        setError(
-          `エラーが発生しました。画面を更新してください。 ${
-            (axiosError.response.data as { error: string }).error
-          }`
-        );
-      } else {
-        console.log("サーバーエラーが発生しました。");
-        setError("サーバーエラーが発生しました。");
-      }
+      axiosErrorHandle(error, setError);
     }
   };
   const handleDialogCancel = () => {
