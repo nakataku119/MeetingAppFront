@@ -3,16 +3,22 @@ import SideMenuList from "@/components/organisms/SideMenuList";
 import TeamsList from "@/components/organisms/TeamsList";
 import UsersList from "@/components/organisms/UsersList";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
+import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
 import { User } from "@/utils/types";
-import { Box } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 
 const SwitchMenu = (props: { menu: string }) => {
   const [users, setUsers] = useState<Array<User>>([]);
+  const [error, setError] = useState<string>();
 
   const fetchAllUsers = async () => {
-    const res = await axiosClient.get("/admin/users");
-    setUsers(res.data);
+    try {
+      const res = await axiosClient.get("/admin/users");
+      setUsers(res.data);
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   useEffect(() => {
@@ -20,17 +26,22 @@ const SwitchMenu = (props: { menu: string }) => {
   }, []);
 
   const handleDelteUser = async (userId: string) => {
-    await axiosClient.delete(`/admin/users/${userId}`);
-    fetchAllUsers();
-  };
-
-  const handleDelteTeam = async (teamId: number) => {
-    await axiosClient.delete(`/admin/teams/${teamId}`);
+    try {
+      await axiosClient.delete(`/admin/users/${userId}`);
+      fetchAllUsers();
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
   };
 
   switch (props.menu) {
     case "ユーザー":
-      return <UsersList users={users} onClickDelete={handleDelteUser} />;
+      return (
+        <>
+          {error && <Alert severity="error">{error}</Alert>}
+          <UsersList users={users} onClickDelete={handleDelteUser} />
+        </>
+      );
     case "チーム":
       return <TeamsList allUsers={users} />;
     case "ミーティング":
