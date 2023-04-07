@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@mui/material";
 import TeamFormDialog from "./TeamFormDialog";
+import { AxiosError } from "axios";
 
 type Props = {
   allUsers: Array<User>;
@@ -22,14 +23,25 @@ export default function TeamsList(props: Props) {
   const [teams, setTeams] = useState<Array<Team>>([]);
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
   const [openNewDialog, setOpenNewDialog] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     fetchAllTeams();
   }, []);
 
   const fetchAllTeams = async () => {
-    const res = await axiosClient.get("/admin/teams");
-    setTeams(res.data);
+    try {
+      const res = await axiosClient.get("/admin/teams");
+      setTeams(res.data);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        console.log((axiosError.response.data as { error: string }).error);
+      } else {
+        console.log("サーバーエラーが発生しました。");
+      }
+      setError("エラーが発生しました。画面を更新してください。");
+    }
   };
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
