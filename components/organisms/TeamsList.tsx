@@ -2,6 +2,7 @@ import { axiosClient } from "@/axios/AxiosClientProvider";
 import { Team, User } from "@/utils/types";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Button,
   Paper,
   Table,
@@ -37,10 +38,15 @@ export default function TeamsList(props: Props) {
       const axiosError = error as AxiosError;
       if (axiosError.response) {
         console.log((axiosError.response.data as { error: string }).error);
+        setError(
+          `エラーが発生しました。画面を更新してください。 ${
+            (axiosError.response.data as { error: string }).error
+          }`
+        );
       } else {
         console.log("サーバーエラーが発生しました。");
+        setError("サーバーエラーが発生しました。");
       }
-      setError("エラーが発生しました。画面を更新してください。");
     }
   };
   const handleDialogCancel = () => {
@@ -89,6 +95,7 @@ export default function TeamsList(props: Props) {
 
   return (
     <TableContainer component={Paper}>
+      {error && <Alert severity="error">{error}</Alert>}
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
