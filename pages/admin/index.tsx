@@ -32,7 +32,7 @@ const SwitchMenu = (props: { menu: string }) => {
     case "ユーザー":
       return <UsersList users={users} onClickDelete={handleDelteUser} />;
     case "チーム":
-      return <TeamsList allUsers={users} onClickDelete={handleDelteTeam} />;
+      return <TeamsList allUsers={users} />;
     case "ミーティング":
       return <>必要か検討</>;
     default:
