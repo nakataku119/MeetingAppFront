@@ -53,6 +53,9 @@ export default function TeamFormDialog(props: Props) {
     setCandidateUsers([]);
     setTeamName(props.team?.name || "");
   };
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+  };
 
   return (
     <Dialog open={props.open}>
@@ -60,6 +63,7 @@ export default function TeamFormDialog(props: Props) {
         elevation={3}
         component="form"
         sx={{ width: "500px", backgroundColor: "#E9EDC9", padding: "20px" }}
+        onSubmit={handleSubmit}
       >
         <TextField
           id="team-name"
