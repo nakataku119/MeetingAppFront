@@ -5,7 +5,7 @@ function twoDigitFormatter(datetime: number): string {
   return ("0" + String(datetime)).slice(-2);
 }
 // YYYY/MM/DD hh:mmでフォーマット
-export function dateFormatter(date: Date): string {
+export function startTimeFormatter(date: Date): string {
   const initDate = new Date(date);
   return `${initDate.getFullYear()}/${twoDigitFormatter(
     initDate.getMonth() + 1
@@ -13,11 +13,18 @@ export function dateFormatter(date: Date): string {
     initDate.getHours()
   )}:${twoDigitFormatter(initDate.getMinutes())}`;
 }
+// hh:mmでフォーマット
+export function endTimeFormatter(date: Date): string {
+  const initDate = new Date(date);
+  return `${twoDigitFormatter(initDate.getHours())}:${twoDigitFormatter(
+    initDate.getMinutes()
+  )}`;
+}
 // 未来時間のミーティングを取得
 export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {
   const nowTime = new Date();
   const planedMeetings: Mtg[] = mtgs.filter(
-    (mtg) => new Date(mtg.schedule) >= nowTime
+    (mtg) => new Date(mtg.startTime) >= nowTime
   );
   return planedMeetings;
 }
@@ -25,7 +32,7 @@ export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {
 export function getPastMeetings(mtgs: Mtg[]): Mtg[] {
   const nowTime = new Date();
   const pastMeetings: Mtg[] = mtgs.filter(
-    (mtg) => new Date(mtg.schedule) < nowTime
+    (mtg) => new Date(mtg.endTime) < nowTime
   );
   return pastMeetings;
 }
@@ -42,10 +49,10 @@ export function getNextMeetingSchedule(
   if (planedMeetingsWithMember.length > 0) {
     const nextMeeting = planedMeetingsWithMember.reduce(
       (prev: Mtg, current: Mtg) => {
-        return current.schedule < prev.schedule ? current : prev;
+        return current.startTime < prev.startTime ? current : prev;
       }
     );
-    return dateFormatter(nextMeeting.schedule);
+    return startTimeFormatter(nextMeeting.startTime);
   }
   return "-----";
 }
@@ -62,10 +69,10 @@ export function getLastMeetingSchedule(
   if (pastMeetingsWithMember.length > 0) {
     const lastMeeting = pastMeetingsWithMember.reduce(
       (prev: Mtg, current: Mtg) => {
-        return current.schedule < prev.schedule ? current : prev;
+        return current.startTime < prev.startTime ? current : prev;
       }
     );
-    return dateFormatter(lastMeeting.schedule);
+    return startTimeFormatter(lastMeeting.startTime);
   }
   return "-----";
 }

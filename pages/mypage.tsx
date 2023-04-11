@@ -46,13 +46,14 @@ const MyPage: NextPage = () => {
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
-      schedule: meetingData.schedule ? new Date(meetingData.schedule) : null,
+      startTime: meetingData.startTime ? new Date(meetingData.startTime) : null,
+      endTime: meetingData.endTime ? new Date(meetingData.endTime) : null,
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.schedule || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {
@@ -69,13 +70,14 @@ const MyPage: NextPage = () => {
 
   const handleUpdateMeeting = async (meetingData: MeetingData) => {
     const reqData = {
-      schedule: new Date(meetingData.schedule!),
+      startTime: new Date(meetingData.startTime!),
+      endTime: new Date(meetingData.endTime!),
       teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.schedule || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {

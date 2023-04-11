@@ -14,7 +14,8 @@ export type Team = {
 
 export type Mtg = {
   id: number;
-  schedule: Date;
+  startTime: Date;
+  endTime: Date;
   team: Team;
   agendas: Agenda[];
   freeAgenda?: string;
@@ -29,7 +30,8 @@ export type Agenda = {
 
 export type MeetingData = {
   id: number | null;
-  schedule: Date | null;
+  startTime: Date | null;
+  endTime: Date | null;
   team: Team | null;
   freeAgenda?: string;
   members: Array<User>;

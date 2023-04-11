@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar, Chip, Paper } from "@mui/material";
 import { Agenda, Mtg, User } from "@/utils/types";
-import { dateFormatter } from "@/utils/functions";
+import { endTimeFormatter, startTimeFormatter } from "@/utils/functions";
 
 type Props = {
   meeting: Mtg;
@@ -29,7 +29,9 @@ export default function MeetingCard(props: Props) {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          {dateFormatter(props.meeting.schedule)}
+          {`${startTimeFormatter(props.meeting.startTime)} - ${endTimeFormatter(
+            props.meeting.endTime
+          )}`}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー

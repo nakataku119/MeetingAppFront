@@ -15,7 +15,7 @@ import {
 import { FormEvent, useContext, useEffect, useState } from "react";
 import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
-import moment from "moment";
+import moment, { min } from "moment";
 import "moment-timezone";
 
 type Props = {
@@ -30,10 +30,12 @@ type Props = {
 
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
+  const [error, setError] = useState<string>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
-    schedule: props.meeting?.schedule || null,
+    startTime: props.meeting?.startTime || null,
+    endTime: props.meeting?.endTime || null,
     team: props.meeting?.team || props.team || null,
     members:
       props.meeting?.users ||
@@ -98,7 +100,8 @@ export default function MeetingFormDialog(props: Props) {
     );
     setMeetingData({
       id: props.meeting?.id || null,
-      schedule: props.meeting?.schedule || null,
+      startTime: props.meeting?.startTime || null,
+      endTime: props.meeting?.endTime || null,
       team: props.meeting?.team || props.team || null,
       members:
         props.meeting?.users ||
@@ -133,25 +136,49 @@ export default function MeetingFormDialog(props: Props) {
         >
           ミーティングの作成
         </Typography>
+        {error && <Alert severity="error">{error}</Alert>}
+        <label>開始時間</label>
         <TextField
           type={"datetime-local"}
           sx={{ width: "100%" }}
           value={
-            meetingData.schedule
+            meetingData.startTime
               ? moment
-                  .tz(new Date(meetingData.schedule), "Asia/Tokyo")
+                  .tz(new Date(meetingData.startTime), "Asia/Tokyo")
                   .format("YYYY-MM-DDTHH:mm")
               : ""
           }
           onChange={(event) => {
             setMeetingData(
               Object.assign({}, meetingData, {
-                schedule: moment
+                startTime: moment
                   .tz(new Date(event.target.value), "Asia/Tokyo")
                   .format("YYYY-MM-DDTHH:mm"),
               })
             );
           }}
+        />
+        <label>終了時間</label>
+        <TextField
+          type={"datetime-local"}
+          sx={{ width: "100%" }}
+          value={
+            meetingData.endTime
+              ? moment
+                  .tz(new Date(meetingData.endTime), "Asia/Tokyo")
+                  .format("YYYY-MM-DDTHH:mm")
+              : ""
+          }
+          onChange={(event) => {
+            setMeetingData(
+              Object.assign({}, meetingData, {
+                endTime: moment
+                  .tz(new Date(event.target.value), "Asia/Tokyo")
+                  .format("YYYY-MM-DDTHH:mm"),
+              })
+            );
+          }}
+          inputProps={{ min: meetingData.startTime }}
         />
         <TeamSelectForm
           belongedTeam={currentUser?.teams}
@@ -230,10 +257,15 @@ export default function MeetingFormDialog(props: Props) {
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
           onClick={() => {
+            if (meetingData.endTime! <= meetingData.startTime!) {
+              return setError("終了時間が不正です。");
+            }
             resetState();
             props.onClickSubmit(meetingData);
           }}
-          disabled={!meetingData.schedule || !meetingData.team}
+          disabled={
+            !meetingData.startTime || !meetingData.endTime || !meetingData.team
+          }
         >
           登録
         </Button>
