@@ -30,6 +30,7 @@ type Props = {
 
 export default function MeetingFormDialog(props: Props) {
   const { currentUser } = useContext(CurrentUserContext);
+  const [error, setError] = useState<string>();
   const [candidateMembers, setCandidateMembars] = useState<Array<User>>([]);
   const [meetingData, setMeetingData] = useState<MeetingData>({
     id: props.meeting?.id || null,
@@ -135,6 +136,7 @@ export default function MeetingFormDialog(props: Props) {
         >
           ミーティングの作成
         </Typography>
+        {error && <Alert severity="error">{error}</Alert>}
         <label>開始時間</label>
         <TextField
           type={"datetime-local"}
@@ -255,6 +257,9 @@ export default function MeetingFormDialog(props: Props) {
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
           onClick={() => {
+            if (meetingData.endTime! <= meetingData.startTime!) {
+              return setError("終了時間が不正です。");
+            }
             resetState();
             props.onClickSubmit(meetingData);
           }}
