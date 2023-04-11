@@ -1,6 +1,5 @@
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
 import {
-  dateFormatter,
   getLastMeetingSchedule,
   getNextMeetingSchedule,
 } from "@/utils/functions";
