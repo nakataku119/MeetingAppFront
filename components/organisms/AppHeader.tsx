@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useAuth0 } from "@auth0/auth0-react";
 import { CurrentUserContext } from "@/contexts/CurrentUserProvider";
-import { axiosClient } from "@/axios/AxiosClientProvider";
 
 export default function AppHeader() {
   const { loginWithRedirect, logout } = useAuth0();
@@ -15,7 +14,6 @@ export default function AppHeader() {
 
   const handleClickLogout = async () => {
     try {
-      await axiosClient.post("/logout");
       logout();
     } catch (error) {
       console.log(error);
