@@ -29,7 +29,7 @@ export default function MeetingCard(props: Props) {
           ミーティング予定
         </Typography>
         <Typography variant="h6" component="div">
-          {dateFormatter(props.meeting.schedule)}
+          {dateFormatter(props.meeting.startTime)}
         </Typography>
         <Typography sx={{ mb: 1, mt: 1 }} color="text.secondary">
           参加メンバー

@@ -17,7 +17,7 @@ export function dateFormatter(date: Date): string {
 export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {
   const nowTime = new Date();
   const planedMeetings: Mtg[] = mtgs.filter(
-    (mtg) => new Date(mtg.schedule) >= nowTime
+    (mtg) => new Date(mtg.startTime) >= nowTime
   );
   return planedMeetings;
 }
@@ -25,7 +25,7 @@ export function getPlanedMeetings(mtgs: Mtg[]): Mtg[] {
 export function getPastMeetings(mtgs: Mtg[]): Mtg[] {
   const nowTime = new Date();
   const pastMeetings: Mtg[] = mtgs.filter(
-    (mtg) => new Date(mtg.schedule) < nowTime
+    (mtg) => new Date(mtg.endTime) < nowTime
   );
   return pastMeetings;
 }
@@ -42,10 +42,10 @@ export function getNextMeetingSchedule(
   if (planedMeetingsWithMember.length > 0) {
     const nextMeeting = planedMeetingsWithMember.reduce(
       (prev: Mtg, current: Mtg) => {
-        return current.schedule < prev.schedule ? current : prev;
+        return current.startTime < prev.startTime ? current : prev;
       }
     );
-    return dateFormatter(nextMeeting.schedule);
+    return dateFormatter(nextMeeting.startTime);
   }
   return "-----";
 }
@@ -62,10 +62,10 @@ export function getLastMeetingSchedule(
   if (pastMeetingsWithMember.length > 0) {
     const lastMeeting = pastMeetingsWithMember.reduce(
       (prev: Mtg, current: Mtg) => {
-        return current.schedule < prev.schedule ? current : prev;
+        return current.startTime < prev.startTime ? current : prev;
       }
     );
-    return dateFormatter(lastMeeting.schedule);
+    return dateFormatter(lastMeeting.startTime);
   }
   return "-----";
 }
