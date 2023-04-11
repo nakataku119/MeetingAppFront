@@ -53,7 +53,7 @@ export default function TeamsList(props: Props) {
     }
     try {
       await axiosClient.post("/admin/teams", {
-        reqData,
+        data: reqData,
       });
       setOpenNewDialog(false);
       fetchAllTeams();
@@ -73,7 +73,7 @@ export default function TeamsList(props: Props) {
     };
     try {
       await axiosClient.put(`/admin/teams/${teamId!}`, {
-        reqData,
+        data: reqData,
       });
       setDialogOpenTeam(null);
       fetchAllTeams();
