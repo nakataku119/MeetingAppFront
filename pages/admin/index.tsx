@@ -1,4 +1,4 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
+import { AxiosClient } from "@/axios/AxiosClientProvider";
 import SideMenuList from "@/components/organisms/SideMenuList";
 import TeamsList from "@/components/organisms/TeamsList";
 import UsersList from "@/components/organisms/UsersList";
@@ -11,27 +11,15 @@ import { useContext, useEffect, useState } from "react";
 const SwitchMenu = (props: { menu: string }) => {
   const [users, setUsers] = useState<Array<User>>([]);
   const [error, setError] = useState<string>();
-
-  const fetchAllUsers = async () => {
-    try {
-      const res = await axiosClient.get("/users");
-      setUsers(res.data);
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
-  };
+  const axiosClient = new AxiosClient();
 
   useEffect(() => {
-    fetchAllUsers();
+    axiosClient.fetchAllUsers(setUsers, setError);
   }, []);
 
   const handleDelteUser = async (userId: string) => {
-    try {
-      await axiosClient.delete(`/admin/users/${userId}`);
-      fetchAllUsers();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.deleteUser(userId, setError);
+    axiosClient.fetchAllUsers(setUsers, setError);
   };
 
   switch (props.menu) {
