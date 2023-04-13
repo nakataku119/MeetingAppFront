@@ -17,11 +17,11 @@ import TeamSelectForm from "../molecules/TeamSelectForm";
 import AgendaSelectFrom from "./AgendaSelectForm";
 import moment, { min } from "moment";
 import "moment-timezone";
+import { AxiosClient } from "@/axios/AxiosClientProvider";
 
 type Props = {
   meeting?: Mtg;
   member?: User;
-  team?: Team;
   open: boolean;
   errors: string[];
   onClickCancel: () => void;
@@ -36,7 +36,6 @@ export default function MeetingFormDialog(props: Props) {
     id: props.meeting?.id || null,
     startTime: props.meeting?.startTime || null,
     endTime: props.meeting?.endTime || null,
-    team: props.meeting?.team || props.team || null,
     members:
       props.meeting?.users ||
       (props.member ? [currentUser, props.member] : [currentUser]),
@@ -50,6 +49,8 @@ export default function MeetingFormDialog(props: Props) {
   const initialAgendaTitles =
     props.meeting?.agendas.map((agenda) => agenda.agenda) || [];
 
+  const customAxios = new AxiosClient();
+
   const filterNewAgendas = (agendas: Array<string>) => {
     return agendas
       .filter((agenda) => !initialAgendaTitles.includes(agenda))
@@ -60,15 +61,12 @@ export default function MeetingFormDialog(props: Props) {
       .filter((agenda) => !agendas.includes(agenda.agenda))
       .map((agenda) => agenda.id);
   };
-  const handleSelectTeam = (team: Team) => {
-    setMeetingData(Object.assign({}, meetingData, { team: team }));
-  };
   const handleChangeText = (name: string) => {
-    if (meetingData.team) {
-      setCandidateMembars(
-        meetingData.team.users.filter((membar) => membar.name.includes(name))
-      );
-    }
+    const allUsers =
+      currentUser?.teams?.find((team) => team.name === "全社")?.users || [];
+    setCandidateMembars(
+      allUsers.filter((member) => member.name.includes(name))
+    );
   };
   const handleSelectUser = (user: User) => {
     if (!meetingData.members.includes(user)) {
@@ -102,7 +100,6 @@ export default function MeetingFormDialog(props: Props) {
       id: props.meeting?.id || null,
       startTime: props.meeting?.startTime || null,
       endTime: props.meeting?.endTime || null,
-      team: props.meeting?.team || props.team || null,
       members:
         props.meeting?.users ||
         (props.member ? [currentUser!, props.member] : [currentUser!]),
@@ -180,16 +177,6 @@ export default function MeetingFormDialog(props: Props) {
           }}
           inputProps={{ min: meetingData.startTime }}
         />
-        <TeamSelectForm
-          belongedTeam={currentUser?.teams}
-          onSelectTeam={handleSelectTeam}
-          initialValue={props.meeting?.team || props.team}
-        />
-        {!meetingData.team && (
-          <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
-            チームを選択してください。
-          </Alert>
-        )}
         <Box
           sx={{ border: 1, borderRadius: 2, height: 100, padding: 0.5, mb: 1 }}
         >
@@ -220,7 +207,6 @@ export default function MeetingFormDialog(props: Props) {
           label="Name"
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
-          disabled={!meetingData.team}
           onChange={(event) => handleChangeText(event.target.value)}
         />
         {candidateMembers?.map((user: User, index: number) => (
@@ -234,7 +220,6 @@ export default function MeetingFormDialog(props: Props) {
         ))}
         <AgendaSelectFrom
           onChange={handleChangeAgendas}
-          disabled={!meetingData.team}
           checkedAgendas={checkedAgenda}
         />
         <TextField
@@ -242,7 +227,6 @@ export default function MeetingFormDialog(props: Props) {
           label="その他"
           variant="filled"
           sx={{ width: "100%", pb: 1 }}
-          disabled={!meetingData.team}
           onChange={(event) => handleChangeFreeAgenda(event.target.value)}
           multiline
           maxRows={4}
@@ -263,9 +247,7 @@ export default function MeetingFormDialog(props: Props) {
             resetState();
             props.onClickSubmit(meetingData);
           }}
-          disabled={
-            !meetingData.startTime || !meetingData.endTime || !meetingData.team
-          }
+          disabled={!meetingData.startTime || !meetingData.endTime}
         >
           登録
         </Button>
