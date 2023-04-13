@@ -104,10 +104,12 @@ export class AxiosClient {
     }
   }
 
-  deleteMeeting(id: number, setError: (value: any) => void) {
-    axiosClient
-      .delete(`/mtgs/${id}`)
-      .catch((error) => axiosErrorHandle(error, setError));
+  async deleteMeeting(id: number, setError: (value: any) => void) {
+    try {
+      return await axiosClient.delete(`/mtgs/${id}`);
+    } catch (error) {
+      return axiosErrorHandle(error, setError);
+    }
   }
 
   fetchAllTeams(
