@@ -1,6 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { createContext, useEffect, useState } from "react";
+import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
+import { MeetingData, User, Team } from "@/utils/types";
 
 export const axiosClient: AxiosInstance = axios.create({
   baseURL: "https://meetingapp-server.tkynkhr.com",
@@ -10,12 +12,155 @@ export const axiosClient: AxiosInstance = axios.create({
 });
 
 export class AxiosClient {
-  async getAllUsers() {
+  async fetchAllUsers(
+    setUsers: (value: any) => void,
+    setError: (value: any) => void
+  ) {
+    axiosClient
+      .get("/users")
+      .then((res) => setUsers(res.data))
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  async fetchCurrentUser(
+    setState: (value: any) => void,
+    setError: (value: any) => void
+  ) {
     try {
-      const res = await axiosClient.get("/users");
-      return res.data;
+      const res = await axiosClient.get("/users/me");
+      if (!res.data) {
+        this.createUser(setState, setError);
+      } else {
+        setState(res.data);
+      }
     } catch (error) {
       console.error(error);
+      axiosErrorHandle(error, setError);
+    }
+  }
+
+  async createUser(
+    setState: (value: any) => void,
+    setError: (value: any) => void
+  ) {
+    await axiosClient.post("/users", { name: "" });
+    this.fetchCurrentUser(setState, setError);
+  }
+
+  async updateUser(name: string, setError: (value: any) => void) {
+    await axiosClient
+      .put("/users", { name: name })
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  async deleteUser(userId: string, setError: (value: any) => void) {
+    try {
+      return await axiosClient.delete(`/admin/users/${userId}`);
+    } catch (error) {
+      return axiosErrorHandle(error, setError);
+    }
+  }
+
+  async createMeeting(data: MeetingData, setError: (value: any) => void) {
+    const reqData = {
+      startTime: data.startTime ? new Date(data.startTime) : null,
+      endTime: data.endTime ? new Date(data.endTime) : null,
+      users: data.members.map((member) => ({ id: member.id })),
+      agendas: data.newAgendas,
+      freeAgenda: data.freeAgenda,
+    };
+    if (!reqData.startTime || !reqData.endTime) {
+      return setError("スケジュールとチーム選択は必須です。");
+    }
+    await axiosClient
+      .post("/mtgs", {
+        data: reqData,
+      })
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  async updateMeeting(data: MeetingData, setError: (value: any) => void) {
+    const reqData = {
+      startTime: new Date(data.startTime!),
+      endTime: new Date(data.endTime!),
+      users: data.members.map((member) => ({ id: member.id })),
+      agendas: data.newAgendas,
+      freeAgenda: data.freeAgenda,
+    };
+    if (!reqData.startTime || !reqData.endTime) {
+      return setError("スケジュールとチーム選択は必須です。");
+    }
+    try {
+      await axiosClient.delete("/agendas", {
+        data: {
+          agendas: data.deletedAgendasId,
+        },
+      });
+      await axiosClient.put(`/mtgs/${data.id}`, {
+        data: reqData,
+      });
+    } catch (error) {
+      axiosErrorHandle(error, setError);
+    }
+  }
+
+  deleteMeeting(id: number, setError: (value: any) => void) {
+    axiosClient
+      .delete(`/mtgs/${id}`)
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  fetchAllTeams(
+    setTeams: (value: any) => void,
+    setError: (value: any) => void
+  ) {
+    axiosClient
+      .get("/admin/teams")
+      .then((res) => setTeams(res.data))
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  createTeam(
+    joinedMembers: Array<User>,
+    name: string,
+    setError: (value: any) => void
+  ) {
+    const reqData = {
+      name: name,
+      members: joinedMembers.map((member) => ({ id: member.id })),
+    };
+    if (!reqData.name) {
+      return;
+    }
+    axiosClient
+      .post("/admin/teams", {
+        data: reqData,
+      })
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  updateTeam(
+    joinedMembers: Array<User>,
+    name: string,
+    teamId: number,
+    setError: (value: any) => void
+  ) {
+    const reqData = {
+      name: name,
+      members: joinedMembers.map((member) => ({ id: member.id })),
+    };
+    return axiosClient
+      .put(`/admin/teams/${teamId!}`, {
+        data: reqData,
+      })
+      .catch((error) => axiosErrorHandle(error, setError));
+  }
+
+  async deleteTeam(team: Team, setError: (value: any) => void) {
+    try {
+      return await axiosClient.delete(`/admin/teams/${team.id}`);
+    } catch (error) {
+      return axiosErrorHandle(error, setError);
     }
   }
 }
