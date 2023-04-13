@@ -119,7 +119,9 @@ export default function MeetingFormDialog(props: Props) {
     event.preventDefault();
   };
   const handleSelectTeam = (team: Team) => {
-    setMeetingData(Object.assign({}, meetingData, { members: team.users }));
+    setMeetingData(
+      Object.assign({}, meetingData, { members: [...team.users, currentUser] })
+    );
     console.log(team);
   };
   return (
