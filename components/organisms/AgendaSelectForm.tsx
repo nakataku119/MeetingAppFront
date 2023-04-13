@@ -2,7 +2,6 @@ import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 
 type Prop = {
   onChange: (agenda: string) => void;
-  disabled: boolean;
   checkedAgendas: Array<string>;
 };
 
@@ -26,7 +25,6 @@ export default function AgendaSelectFrom(props: Prop) {
               onChange={() => props.onChange(agenda)}
               value={agenda}
               color="primary"
-              disabled={props.disabled}
               checked={props.checkedAgendas.includes(agenda)}
             />
           }
