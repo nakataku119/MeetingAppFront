@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/utils/types";
 import { AxiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
-import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
 import { Button, Dialog } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -28,10 +27,7 @@ const CurrentUserProvider = ({
 
   useEffect(() => {
     if (hasToken) {
-      axiosClient
-        .fetchCurrentUser()
-        .then((currentUser) => setCurrentUser(currentUser))
-        .catch((error) => axiosErrorHandle(error, setError));
+      axiosClient.fetchCurrentUser(setCurrentUser, setError);
     }
   }, [hasToken]);
 
