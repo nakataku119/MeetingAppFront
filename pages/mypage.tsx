@@ -48,12 +48,11 @@ const MyPage: NextPage = () => {
     const reqData = {
       startTime: meetingData.startTime ? new Date(meetingData.startTime) : null,
       endTime: meetingData.endTime ? new Date(meetingData.endTime) : null,
-      teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {
@@ -72,12 +71,11 @@ const MyPage: NextPage = () => {
     const reqData = {
       startTime: new Date(meetingData.startTime!),
       endTime: new Date(meetingData.endTime!),
-      teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {
@@ -107,7 +105,7 @@ const MyPage: NextPage = () => {
   };
 
   const MeetingCardList = () => {
-    const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    const planedMeetings = getPlanedMeetings(currentUser!.mtgs!);
     if (planedMeetings.length == 0) {
       return (
         <Box
@@ -186,7 +184,6 @@ const MyPage: NextPage = () => {
               }}
               open={item == newMeetingMember}
               member={item}
-              team={selectedTeam}
               errors={errors}
             />
           </Box>
