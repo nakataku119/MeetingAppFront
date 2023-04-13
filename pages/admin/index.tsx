@@ -14,7 +14,7 @@ const SwitchMenu = (props: { menu: string }) => {
 
   const fetchAllUsers = async () => {
     try {
-      const res = await axiosClient.get("/admin/users");
+      const res = await axiosClient.get("/users");
       setUsers(res.data);
     } catch (error) {
       axiosErrorHandle(error, setError);
