@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/utils/types";
-import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
+import { AxiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
 import { Button, Dialog } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -24,33 +24,16 @@ const CurrentUserProvider = ({
   const { hasToken } = useContext(AxiosClientContext);
   const [error, setError] = useState<string>();
   const { logout } = useAuth0();
+  const axiosClient = new AxiosClient();
+
   useEffect(() => {
     if (hasToken) {
-      fetchCurrentUser();
+      axiosClient
+        .fetchCurrentUser()
+        .then((currentUser) => setCurrentUser(currentUser))
+        .catch((error) => axiosErrorHandle(error, setError));
     }
   }, [hasToken]);
-
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await axiosClient.get("/users/me");
-      if (!res.data) {
-        createUser();
-      } else {
-        setCurrentUser(res.data);
-      }
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
-  };
-
-  const createUser = async () => {
-    try {
-      await axiosClient.post("/users", { name: "" });
-      fetchCurrentUser();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
-  };
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
