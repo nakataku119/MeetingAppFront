@@ -118,6 +118,10 @@ export default function MeetingFormDialog(props: Props) {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
   };
+  const handleSelectTeam = (team: Team) => {
+    setMeetingData(Object.assign({}, meetingData, { members: team.users }));
+    console.log(team);
+  };
   return (
     <Dialog open={props.open}>
       <Paper
@@ -202,11 +206,17 @@ export default function MeetingFormDialog(props: Props) {
             />
           ))}
         </Box>
+        <Typography
+          component="h1"
+          sx={{ width: "100%", fontSize: 14, textAlign: "center" }}
+        >
+          メンバーまたはチームを追加してください。
+        </Typography>
         <TextField
           id="user-name"
           label="Name"
           variant="filled"
-          sx={{ width: "100%", pb: 1 }}
+          sx={{ width: "100%", pb: 0 }}
           onChange={(event) => handleChangeText(event.target.value)}
         />
         {candidateMembers?.map((user: User, index: number) => (
@@ -218,6 +228,10 @@ export default function MeetingFormDialog(props: Props) {
             {user.name}
           </MenuItem>
         ))}
+        <TeamSelectForm
+          belongedTeam={currentUser?.teams}
+          onSelectTeam={handleSelectTeam}
+        />
         <AgendaSelectFrom
           onChange={handleChangeAgendas}
           checkedAgendas={checkedAgenda}
