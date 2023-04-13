@@ -2,8 +2,8 @@ export type User = {
   id: string;
   name: string;
   admin: boolean;
-  teams: Team[];
-  mtgs: Mtg[];
+  teams?: Team[];
+  mtgs?: Mtg[];
 };
 
 export type Team = {
