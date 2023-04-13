@@ -2,8 +2,8 @@ export type User = {
   id: string;
   name: string;
   admin: boolean;
-  teams: Team[];
-  mtgs: Mtg[];
+  teams?: Team[];
+  mtgs?: Mtg[];
 };
 
 export type Team = {
@@ -16,7 +16,6 @@ export type Mtg = {
   id: number;
   startTime: Date;
   endTime: Date;
-  team: Team;
   agendas: Agenda[];
   freeAgenda?: string;
   users: User[];
@@ -32,7 +31,6 @@ export type MeetingData = {
   id: number | null;
   startTime: Date | null;
   endTime: Date | null;
-  team: Team | null;
   freeAgenda?: string;
   members: Array<User>;
   newAgendas: { agenda: string }[];

@@ -12,6 +12,7 @@ import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/mypage`;
+  const redirectUriDev = "http://localhost:3000/mypage";
   return (
     <>
       <Head>
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
         clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
         authorizationParams={{
           redirect_uri: redirectUri,
+          // redirect_uri: redirectUriDev,
           audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!,
         }}
       >

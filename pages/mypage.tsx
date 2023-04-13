@@ -48,12 +48,11 @@ const MyPage: NextPage = () => {
     const reqData = {
       startTime: meetingData.startTime ? new Date(meetingData.startTime) : null,
       endTime: meetingData.endTime ? new Date(meetingData.endTime) : null,
-      teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {
@@ -72,12 +71,11 @@ const MyPage: NextPage = () => {
     const reqData = {
       startTime: new Date(meetingData.startTime!),
       endTime: new Date(meetingData.endTime!),
-      teamId: meetingData.team?.id,
       users: meetingData.members.map((member) => ({ id: member.id })),
       agendas: meetingData.newAgendas,
       freeAgenda: meetingData.freeAgenda,
     };
-    if (!reqData.startTime || !reqData.endTime || !reqData.teamId) {
+    if (!reqData.startTime || !reqData.endTime) {
       return setError("スケジュールとチーム選択は必須です。");
     }
     try {
@@ -107,7 +105,7 @@ const MyPage: NextPage = () => {
   };
 
   const MeetingCardList = () => {
-    const planedMeetings = getPlanedMeetings(currentUser!.mtgs);
+    const planedMeetings = getPlanedMeetings(currentUser!.mtgs!);
     if (planedMeetings.length == 0) {
       return (
         <Box
@@ -154,25 +152,11 @@ const MyPage: NextPage = () => {
   };
 
   const MemberCardList = () => {
-    if (!selectedTeam) {
-      return (
-        <Box
-          sx={{
-            minHeight: 600,
-            alignItems: "center",
-            justifyContent: "center",
-            display: "flex",
-          }}
-        >
-          <Typography variant="h5" component="h1" color="text.secondary">
-            チームを選択してください。
-          </Typography>
-        </Box>
-      );
-    }
+    const allUsers =
+      currentUser?.teams?.find((team) => team.name === "全社")?.users || [];
     return (
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        {selectedTeam?.users.map((item: User, index: number) => (
+        {(selectedTeam?.users || allUsers).map((item: User, index: number) => (
           <Box key={index} sx={{ pb: 1, width: 300, height: 250 }}>
             <MemberCard
               member={item}
@@ -186,7 +170,6 @@ const MyPage: NextPage = () => {
               }}
               open={item == newMeetingMember}
               member={item}
-              team={selectedTeam}
               errors={errors}
             />
           </Box>

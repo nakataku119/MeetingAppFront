@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@/utils/types";
 import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import { axiosErrorHandle } from "@/utils/axiosErrorHandle";
-import { Dialog } from "@mui/material";
+import { Button, Dialog } from "@mui/material";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface UserContextProps {
   currentUser: User | null;
@@ -22,7 +23,7 @@ const CurrentUserProvider = ({
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { hasToken } = useContext(AxiosClientContext);
   const [error, setError] = useState<string>();
-
+  const { logout } = useAuth0();
   useEffect(() => {
     if (hasToken) {
       fetchCurrentUser();
@@ -53,7 +54,10 @@ const CurrentUserProvider = ({
 
   return (
     <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
-      <Dialog open={Boolean(error)}>{error}</Dialog>
+      <Dialog open={Boolean(error)}>
+        {error}
+        <Button onClick={() => logout()}>ログアウト</Button>
+      </Dialog>
       {children}
     </CurrentUserContext.Provider>
   );

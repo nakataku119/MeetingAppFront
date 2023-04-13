@@ -41,7 +41,7 @@ export function getNextMeetingSchedule(
   currentUser: User,
   teamMember: User
 ): string {
-  const meetingsWithMember = currentUser.mtgs.filter((mtg) => {
+  const meetingsWithMember = currentUser.mtgs!.filter((mtg) => {
     const joinedMembersId = mtg.users.map((user) => user.id);
     return joinedMembersId.includes(teamMember.id);
   });
@@ -61,7 +61,7 @@ export function getLastMeetingSchedule(
   currentUser: User,
   teamMember: User
 ): string {
-  const meetingsWithMember = currentUser.mtgs.filter((mtg) => {
+  const meetingsWithMember = currentUser.mtgs!.filter((mtg) => {
     const joinedMembersId = mtg.users.map((user) => user.id);
     return joinedMembersId.includes(teamMember.id);
   });

@@ -9,6 +9,17 @@ export const axiosClient: AxiosInstance = axios.create({
   timeout: 10000,
 });
 
+export class AxiosClient {
+  async getAllUsers() {
+    try {
+      const res = await axiosClient.get("/users");
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
 interface AxiosClientContextProps {
   hasToken: boolean;
 }
