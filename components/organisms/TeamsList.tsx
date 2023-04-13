@@ -1,4 +1,4 @@
-import { axiosClient } from "@/axios/AxiosClientProvider";
+import { AxiosClient } from "@/axios/AxiosClientProvider";
 import { Team, User } from "@/utils/types";
 import { useEffect, useState } from "react";
 import {
@@ -24,19 +24,11 @@ export default function TeamsList(props: Props) {
   const [dialogOpenTeam, setDialogOpenTeam] = useState<Team | null>(null);
   const [openNewDialog, setOpenNewDialog] = useState<boolean>(false);
   const [error, setError] = useState<string>();
+  const axiosClient = new AxiosClient();
 
   useEffect(() => {
-    fetchAllTeams();
+    axiosClient.fetchAllTeams(setTeams, setError);
   }, []);
-
-  const fetchAllTeams = async () => {
-    try {
-      const res = await axiosClient.get("/admin/teams");
-      setTeams(res.data);
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
-  };
 
   const handleDialogCancel = () => {
     setDialogOpenTeam(null);
@@ -44,22 +36,9 @@ export default function TeamsList(props: Props) {
   };
 
   const handleCreateTeam = async (joinedMembers: Array<User>, name: string) => {
-    const reqData = {
-      name: name,
-      members: joinedMembers.map((member) => ({ id: member.id })),
-    };
-    if (!reqData.name) {
-      return;
-    }
-    try {
-      await axiosClient.post("/admin/teams", {
-        data: reqData,
-      });
-      setOpenNewDialog(false);
-      fetchAllTeams();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.createTeam(joinedMembers, name, setError);
+    setOpenNewDialog(false);
+    axiosClient.fetchAllTeams(setTeams, setError);
   };
 
   const handleUpdateTeam = async (
@@ -67,28 +46,14 @@ export default function TeamsList(props: Props) {
     name: string,
     teamId?: number
   ) => {
-    const reqData = {
-      name: name,
-      members: joinedMembers.map((member) => ({ id: member.id })),
-    };
-    try {
-      await axiosClient.put(`/admin/teams/${teamId!}`, {
-        data: reqData,
-      });
-      setDialogOpenTeam(null);
-      fetchAllTeams();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.updateTeam(joinedMembers, name, teamId!, setError);
+    await axiosClient.fetchAllTeams(setTeams, setError);
+    setDialogOpenTeam(null);
   };
 
   const handleDeleteTeam = async (team: Team) => {
-    try {
-      await axiosClient.delete(`/admin/teams/${team.id}`);
-      fetchAllTeams();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.deleteTeam(team, setError);
+    axiosClient.fetchAllTeams(setTeams, setError);
   };
 
   return (

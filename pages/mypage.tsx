@@ -1,4 +1,4 @@
-import { axiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
+import { AxiosClient, AxiosClientContext } from "@/axios/AxiosClientProvider";
 import TeamSelectForm from "@/components/molecules/TeamSelectForm";
 import LoginButtonDialog from "@/components/organisms/LoginButtonDialog";
 import MeetingCard from "@/components/organisms/MeetingCard";
@@ -22,86 +22,30 @@ const MyPage: NextPage = () => {
   const [error, setError] = useState<string>();
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { hasToken } = useContext(AxiosClientContext);
-
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await axiosClient.get("/users/me");
-      setCurrentUser(res.data);
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
-  };
+  const axiosClient = new AxiosClient();
 
   const handleSignupUser = async (name: string) => {
-    const reqDate = {
-      name: name,
-    };
-    try {
-      await axiosClient.put("/users", reqDate);
-      fetchCurrentUser();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.updateUser(name, setError);
+    axiosClient.fetchCurrentUser(setCurrentUser, setError);
   };
 
   const handleCreateMeeting = async (meetingData: MeetingData) => {
-    const reqData = {
-      startTime: meetingData.startTime ? new Date(meetingData.startTime) : null,
-      endTime: meetingData.endTime ? new Date(meetingData.endTime) : null,
-      users: meetingData.members.map((member) => ({ id: member.id })),
-      agendas: meetingData.newAgendas,
-      freeAgenda: meetingData.freeAgenda,
-    };
-    if (!reqData.startTime || !reqData.endTime) {
-      return setError("スケジュールとチーム選択は必須です。");
-    }
-    try {
-      await axiosClient.post("/mtgs", {
-        data: reqData,
-      });
-      setNewMeetingMember(null);
-      setIsDialogOpen(false);
-      fetchCurrentUser();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.createMeeting(meetingData, setError);
+    setNewMeetingMember(null);
+    setIsDialogOpen(false);
+    axiosClient.fetchCurrentUser(setCurrentUser, setError);
   };
 
   const handleUpdateMeeting = async (meetingData: MeetingData) => {
-    const reqData = {
-      startTime: new Date(meetingData.startTime!),
-      endTime: new Date(meetingData.endTime!),
-      users: meetingData.members.map((member) => ({ id: member.id })),
-      agendas: meetingData.newAgendas,
-      freeAgenda: meetingData.freeAgenda,
-    };
-    if (!reqData.startTime || !reqData.endTime) {
-      return setError("スケジュールとチーム選択は必須です。");
-    }
-    try {
-      await axiosClient.delete("/agendas", {
-        data: {
-          agendas: meetingData.deletedAgendasId,
-        },
-      });
-      await axiosClient.put(`/mtgs/${meetingData.id}`, {
-        data: reqData,
-      });
-      setNewMeetingMember(null);
-      setIsDialogOpen(false);
-      fetchCurrentUser();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.updateMeeting(meetingData, setError);
+    setNewMeetingMember(null);
+    setIsDialogOpen(false);
+    axiosClient.fetchCurrentUser(setCurrentUser, setError);
   };
 
   const handleDeleteMeeting = async (id: number) => {
-    try {
-      await axiosClient.delete(`/mtgs/${id}`);
-      fetchCurrentUser();
-    } catch (error) {
-      axiosErrorHandle(error, setError);
-    }
+    await axiosClient.deleteMeeting(id, setError);
+    axiosClient.fetchCurrentUser(setCurrentUser, setError);
   };
 
   const MeetingCardList = () => {

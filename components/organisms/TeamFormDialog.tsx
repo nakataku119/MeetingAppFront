@@ -116,7 +116,6 @@ export default function TeamFormDialog(props: Props) {
           variant="outlined"
           sx={{ width: "100%", padding: "10px" }}
           onClick={() => {
-            resetState();
             props.onClickSubmit(joinedMembers, teamName, props.team?.id);
           }}
           disabled={!teamName}
